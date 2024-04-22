@@ -1,0 +1,20 @@
+name: CI (api)
+
+on:
+  push:
+    branches: main
+  workflow_dispatch:
+
+jobs:
+  # This workflow contains a single job called "build"
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+      - run: pip install -r requirements.txt
+        with:
+          cache: 'pip'
+      - run: pytest
+
