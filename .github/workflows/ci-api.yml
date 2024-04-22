@@ -3,10 +3,11 @@ name: CI (api)
 on:
   push:
     branches: main
+    paths:
+      - api
   workflow_dispatch:
 
 jobs:
-  # This workflow contains a single job called "build"
   test:
     runs-on: ubuntu-latest
 
