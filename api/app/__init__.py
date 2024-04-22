@@ -1,13 +1,28 @@
-from os import getenv
+import os
 
 from apiflask import APIFlask
-from dotenv import load_dotenv
 
 
-def create_app():
-    load_dotenv()
-
+def create_app(temp_config=None):
     app = APIFlask(__name__, title="Rhythmic Threads API", version="0.1.0")
+
+    if temp_config is None:
+        # load the default config, if it exists
+        app.config.from_pyfile("config.py", silent=True)
+    else:
+        # load the test config if passed in, for custom values
+        app.config.from_mapping(temp_config)
+
+    app.secret_key = app.config.get("SECRET_KEY")
+    app.config.from_mapping(
+        DATABASE=os.path.join(app.instance_path, "rt_dev.sqlite"),
+    )
+
+    # ensure the instance folder exists
+    try:
+        os.makedirs(app.instance_path)
+    except OSError:
+        pass
 
     # Swagger UI configuration
     app.info = {
@@ -23,12 +38,22 @@ def create_app():
         },
     }
 
+    from . import db
+
+    # initialize the database
+    db.init_app(app)
+
+    # Blueprints / Routes
+    from .routes import auth
+
+    app.register_blueprint(auth.bp)
+
     @app.route("/")
     def hello_world():
         return "Hello, World!"
 
     # don't run app in production server deployments
     if __name__ == "__main__":
-        app.run(debug=getenv("DEBUG", False))
+        app.run(debug=app.config.get("DEBUG", True))
 
     return app
