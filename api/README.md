@@ -22,8 +22,46 @@ or:
 ./.venv/Scripts/activate
 ```
 
-### Installing Dependencies
+#### Installing Dependencies
 
 ```sh
 pip install -r requirements.txt
+```
+
+#### Preparing the database
+
+Create a new database:
+
+```sh
+# Schema are inside sql/schema.sql
+flask --app app init-db
+```
+
+This will create a new SQLite database in the `instance` folder.
+
+#### Running the API
+
+Create `.env` from `.env.sample` file in the `./api` directory:
+
+```shell
+cp .env.sample .env
+```
+
+Generate secret key for authentication:
+
+```sh
+python -c 'import secrets; print(secrets.token_hex())'
+```
+
+and add the following:
+
+```sh
+DEBUG=True
+SECRET_KEY=<secret_key>
+```
+
+Run flask inside `api/`:
+
+```sh
+flask run # or with --debug
 ```
