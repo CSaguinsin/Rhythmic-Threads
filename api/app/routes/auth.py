@@ -92,13 +92,16 @@ def login(data):
 
 @bp.get("/logout")
 @bp.output(GenericResponse, 200)
+@bp.auth_required(auth)
 @bp.doc(
     summary="Logout current user",
     description="This requires manual clearing of session cookies from client browser.",
 )
 def logout():
     session.clear()
-    return make_response({"message": "User successfully logged out."}, 200)
+    return GenericResponse().dump(
+        {"message": f"User {auth.current_user['username']} successfully logged out."}
+    )
 
 
 @bp.get("/user")
