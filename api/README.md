@@ -22,24 +22,24 @@ or:
 ./.venv/Scripts/activate
 ```
 
-#### Installing Dependencies
+### Installing Dependencies
 
 ```sh
 pip install -r requirements.txt
 ```
 
-#### Preparing the database
+### Preparing the database
 
 Create a new database:
 
 ```sh
 # Schema are inside sql/schema.sql
-flask --app app init-db
+flask --app app setup-db
 ```
 
 This will create a new SQLite database in the `instance` folder.
 
-#### Running the API
+### Running the API
 
 Create `.env` from `.env.sample` file in the `./api` directory:
 
@@ -64,4 +64,20 @@ Run flask inside `api/`:
 
 ```sh
 flask run # or with --debug
+```
+
+### Submitting Changes
+
+After making changes, make sure all tests pass to
+verify that the changes are working as expected,
+and did not break any existing functionality:
+
+```sh
+./.venv/Scripts/pytest
+```
+
+or
+
+```sh
+pytest
 ```

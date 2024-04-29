@@ -43,7 +43,7 @@ def create_app(temp_config=None):
     from . import db
 
     # initialize the database
-    db.init_app(app)
+    db.setup_app(app)
 
     # Blueprints / Routes
     from .routes import auth

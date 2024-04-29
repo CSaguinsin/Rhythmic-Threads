@@ -2,9 +2,10 @@ import sqlite3
 
 import click
 from flask import current_app, g
+from flask.cli import with_appcontext
 
 
-def init_db():
+def setup_db():
     """
     Create the database from the schema.sql file.
 
@@ -19,8 +20,9 @@ def init_db():
     db.commit()
 
 
-@click.command("init-db")
-def init_db_command():
+@click.command("setup-db")
+@with_appcontext
+def setup_db_cmd():
     """
     Creates a CLI command to initialize the database.
 
@@ -28,12 +30,11 @@ def init_db_command():
 
     :return:
     """
-
-    init_db()
+    setup_db()
     click.echo("Initialized the database.")
 
 
-def init_app(app):
+def setup_app(app):
     """
     Register database functions with the application instance.
     :param app:
@@ -41,7 +42,7 @@ def init_app(app):
     """
 
     app.teardown_appcontext(close_db)
-    app.cli.add_command(init_db_command)
+    app.cli.add_command(setup_db_cmd)
 
 
 def get_db():
@@ -64,6 +65,7 @@ def get_db():
     return g.db
 
 
+# noinspection PyUnusedLocal
 def close_db(e=None):
     """
     checks if a connection was created by checking if `g.db` was set.
