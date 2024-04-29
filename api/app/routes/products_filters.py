@@ -66,6 +66,23 @@ def get_products_by_category(category):
         close_db()
 
 
+@bp.get("/collection/<string:collection>")
+@bp.input({"collection": str}, location="query")
+@bp.output(ProductResponse(many=True))
+@bp.doc(summary="Get all products in a specific collection")
+def get_products_by_collection(collection):
+    try:
+        db = get_db()
+        products = db.execute(
+            "SELECT * FROM product WHERE collection = ?", (collection,)
+        ).fetchall()
+        return ProductResponse().dump(products)
+    except Exception as e:
+        return str(e.__cause__)
+    finally:
+        close_db()
+
+
 @bp.get("/sx/<string:sx>")
 @bp.input({"sx": str}, location="query")
 @bp.output(ProductResponse(many=True))
