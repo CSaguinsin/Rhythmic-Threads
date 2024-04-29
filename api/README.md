@@ -42,6 +42,16 @@ flask --app app setup-db
 
 This will create a new SQLite database in the `instance` folder.
 
+#### Seeding the database
+
+Seed the database with sample random initial data:
+
+Add this to `.env` file:
+
+```env
+SEED=True
+```
+
 ### Running the API
 
 Create `.env` from `.env.sample` file in the `./api` directory:
@@ -84,3 +94,6 @@ or
 ```sh
 pytest
 ```
+
+> [!IMPORTANT]\
+> Failing existing tests signifies existing feature breakages.
