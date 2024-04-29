@@ -1,4 +1,4 @@
-from apiflask import APIBlueprint, HTTPBasicAuth
+from apiflask import APIBlueprint, abort, HTTPBasicAuth
 
 from app.db import get_db, close_db
 from ..models.product import ProductResponse
@@ -23,9 +23,10 @@ def get_new_arrivals():
         close_db()
 
 
-@bp.get("/ratings/<int:ratings>")
+@bp.get("/ratings/<int:rating>")
 @bp.output(ProductResponse(many=True))
-@bp.doc(summary="Get all products with a specific rating")
+@bp.doc(summary="Get all products with a specific rating",
+        description="Ratings are comprised of 1 -> 5 as integers, 1 being the lowest, 5 the highest.")
 def get_products_by_rating(ratings):
     try:
         db = get_db()
@@ -85,17 +86,23 @@ def get_products_by_size(size):
         close_db()
 
 
-@bp.get("/price/<int:starting_price>-<int:ending_price>")
+@bp.get("/price/<float:starting_price>-<float:ending_price>")
 @bp.output(ProductResponse(many=True))
 @bp.doc(summary="Get all products within a specific price range")
 def get_products_by_price_range(starting_price, ending_price):
     try:
-        db = get_db()
-        products = db.execute(
-            "SELECT * FROM product WHERE price BETWEEN ? AND ?",
-            (starting_price, ending_price),
-        ).fetchall()
-        return ProductResponse().dump(products)
+        if starting_price >= ending_price:
+            abort(
+                status_code=400,
+                message="Starting price cannot be greater than or equal the ending price",
+            )
+        else:
+            db = get_db()
+            products = db.execute(
+                "SELECT * FROM product WHERE price BETWEEN ? AND ?",
+                (starting_price, ending_price),
+            ).fetchall()
+            return ProductResponse().dump(products)
     except Exception as e:
         return str(e.__cause__)
     finally:

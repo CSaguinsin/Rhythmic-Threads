@@ -1,3 +1,5 @@
+import decimal
+
 from apiflask import Schema, fields
 from datetime import datetime
 
@@ -10,7 +12,7 @@ class Product(Schema):
     category = fields.String(required=True)
     sx = fields.String(required=True)
     size = fields.String(required=True)
-    price = fields.Float(required=True)
+    price = fields.Decimal(required=True, rounding=decimal.ROUND_FLOOR)
     ratings = fields.Integer(allow_none=True)
     created = fields.DateTime(dump_only=True, dump_default=datetime.now())
     updated = fields.DateTime(dump_only=True, dump_default=datetime.now())
