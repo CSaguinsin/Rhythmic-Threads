@@ -48,9 +48,11 @@ def create_app(temp_config=None):
     # Blueprints / Routes
     from .routes import auth
     from .routes import products
+    from .routes import products_filters
 
     app.register_blueprint(auth.bp)
     app.register_blueprint(products.bp)
+    app.register_blueprint(products_filters.bp)
 
     # don't run app in production server deployments
     if __name__ == "__main__":

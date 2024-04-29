@@ -1,7 +1,10 @@
-from apiflask import APIBlueprint, HTTPBasicAuth
+from apiflask import APIBlueprint, abort, HTTPBasicAuth
+from flask import jsonify
+from marshmallow import ValidationError
 
 from app.db import get_db, close_db
-from ..models.product import ProductResponse
+
+from ..models.product import ProductResponse, ProductRequest
 
 bp = APIBlueprint("products", __name__, url_prefix="/products")
 auth = HTTPBasicAuth()
@@ -21,96 +24,117 @@ def get_products():
         close_db()
 
 
-@bp.get("/new-arrivals")
-@bp.output(ProductResponse(many=True))
-@bp.doc(summary="Get all products created in 7 days")
-def get_new_arrivals():
+@bp.get("/<int:id>")
+@bp.output(ProductResponse)
+@bp.doc(summary="Get a product by ID")
+def get_product_by_id(pid):
     try:
         db = get_db()
-        products = db.execute(
-            "SELECT * FROM product WHERE created >= datetime('now', '-7 days')"
-        ).fetchall()
-        return ProductResponse().dump(products)
+        product = db.execute("SELECT * FROM product WHERE id = ?", (pid,)).fetchone()
+        return ProductResponse().dump(product)
     except Exception as e:
         return str(e.__cause__)
     finally:
         close_db()
 
 
-@bp.get("/<int:ratings>")
-@bp.output(ProductResponse(many=True))
-@bp.doc(summary="Get all products with a specific rating")
-def get_products_by_rating(ratings):
+@bp.post("/")
+@bp.input(ProductRequest, location="json")
+@bp.output(ProductResponse, 201)
+@bp.doc(summary="Create a new product")
+def create_product(product):
+    error = __validate_product(product)
+    db = get_db()
+
     try:
-        db = get_db()
-        products = db.execute(
-            "SELECT * FROM product WHERE ratings = ?", (ratings,)
-        ).fetchall()
-        return ProductResponse().dump(products)
+        if error:
+            abort(
+                status_code=400,
+                message="Validation Error",
+                detail=error
+            )
+
+        if error is None:
+            db.execute(
+                "INSERT INTO product (name, description, collection, category, sx, size, price, ratings) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                (
+                    product["name"],
+                    product["description"],
+                    product["collection"],
+                    product["category"],
+                    product["sx"],
+                    product["size"],
+                    product["price"],
+                    product["ratings"],
+                ),
+            )
+            db.commit()
+
+            # Get the product that was just created
+            product = db.execute("SELECT * FROM product WHERE name = ?", (product["name"],)).fetchone()
+            return ProductResponse().dump(product)
     except Exception as e:
-        return str(e.__cause__)
+        abort(500, str(e.__cause__))
     finally:
         close_db()
 
 
-@bp.get("/<string:category>")
-@bp.output(ProductResponse(many=True))
-@bp.doc(summary="Get all products in a specific category")
-def get_products_by_category(category):
+@bp.patch("/<int:id>")
+@bp.input(ProductRequest, location="json")
+@bp.output(ProductResponse)
+@bp.doc(summary="Update a product by ID")
+def update_product(pid, product):
+    error = __validate_product(product)
+    db = get_db()
+
     try:
-        db = get_db()
-        products = db.execute(
-            "SELECT * FROM product WHERE category = ?", (category,)
-        ).fetchall()
-        return ProductResponse().dump(products)
+        if error:
+            abort(
+                status_code=400,
+                message="Validation Error",
+                detail=error
+            )
+
+        if error is None:
+            db.execute(
+                "UPDATE product SET name = ?, description = ?, collection = ?, category = ?, sx = ?, size = ?, "
+                "price = ?, ratings = ?"
+                "WHERE id = ?",
+                (
+                    product["name"],
+                    product["description"],
+                    product["collection"],
+                    product["category"],
+                    product["sx"],
+                    product["size"],
+                    product["price"],
+                    product["ratings"],
+                    pid,
+                ),
+            )
+            db.commit()
+
+            # Get the updated product
+            product = db.execute("SELECT * FROM product WHERE id = ?", (pid,)).fetchone()
+            return ProductResponse().dump(product)
+
     except Exception as e:
-        return str(e.__cause__)
+        abort(500, str(e.__cause__))
     finally:
         close_db()
 
 
-@bp.get("/<string:sx>")
-@bp.output(ProductResponse(many=True))
-@bp.doc(summary="Get all products within a specific sex")
-def get_products_by_sx(sx):
+def __validate_product(product):
+    """
+    Validate if input fields are correct using marshmallow.
+
+    :param product:
+    :return:
+    """
+
     try:
-        db = get_db()
-        products = db.execute("SELECT * FROM product WHERE sx = ?", (sx,)).fetchall()
-        return ProductResponse().dump(products)
-    except Exception as e:
-        return str(e.__cause__)
-    finally:
-        close_db()
-
-
-@bp.get("/<string:size>")
-@bp.output(ProductResponse(many=True))
-@bp.doc(summary="Get all products with a specific size")
-def get_products_by_size(size):
-    try:
-        db = get_db()
-        products = db.execute(
-            "SELECT * FROM product WHERE size = ?", (size,)
-        ).fetchall()
-        return ProductResponse().dump(products)
-    except Exception as e:
-        return str(e.__cause__)
-    finally:
-        close_db()
-
-
-@bp.get("/<int:starting_price>-<int:ending_price>")
-@bp.output(ProductResponse(many=True))
-@bp.doc(summary="Get all products within a specific price range")
-def get_products_by_price_range(starting_price, ending_price):
-    try:
-        db = get_db()
-        products = db.execute(
-            "SELECT * FROM product WHERE price BETWEEN ? AND ?",
-            (starting_price, ending_price),
-        ).fetchall()
-        return ProductResponse().dump(products)
-    except Exception as e:
-        return str(e.__cause__)
-    finally:
-        close_db()
+        ProductRequest().load(product)
+        return None
+    except ValidationError as e:
+        return jsonify(e.messages)
