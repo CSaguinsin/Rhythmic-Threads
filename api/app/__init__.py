@@ -4,7 +4,9 @@ from apiflask import APIFlask
 
 
 def create_app(temp_config=None):
-    app = APIFlask(__name__, title="Rhythmic Threads API", version="0.1.0")
+    app = APIFlask(
+        __name__, title="Rhythmic Threads API", version="0.1.0", docs_path="/"
+    )
 
     if temp_config is None:
         # load the default config, if it exists
@@ -45,12 +47,10 @@ def create_app(temp_config=None):
 
     # Blueprints / Routes
     from .routes import auth
+    from .routes import products
 
     app.register_blueprint(auth.bp)
-
-    @app.route("/")
-    def hello_world():
-        return "Hello, World!"
+    app.register_blueprint(products.bp)
 
     # don't run app in production server deployments
     if __name__ == "__main__":

@@ -15,9 +15,17 @@ CREATE TABLE user
 
 CREATE TABLE product
 (
-    id    INTEGER PRIMARY KEY UNIQUE,
-    name  VARCHAR(255)   NOT NULL,
-    price DECIMAL(10, 2) NOT NULL
+    id          INTEGER PRIMARY KEY,
+    name        VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    collection  VARCHAR(255) NOT NULL,
+    category    VARCHAR(255) NOT NULL,
+    sx          VARCHAR(255) NOT NULL,
+    size        VARCHAR(255) NOT NULL,
+    price       DECIMAL(10, 2) NOT NULL,
+    ratings     INTEGER,
+    created     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE cart
