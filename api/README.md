@@ -3,7 +3,7 @@
 ## Development
 
 > [!NOTE]\
-> API Documentation can be accessed at [http://localhost:5000](http://localhost:5000)
+> API Documentation can be accessed at [http://localhost:5000](http://localhost:5000) by default.
 
 Activate virtual environment
 
@@ -42,14 +42,12 @@ flask --app app setup-db
 
 This will create a new SQLite database in the `instance` folder.
 
-#### Seeding the database
+#### Seeding the database (Optional)
 
-Seed the database with sample random initial data:
+To seed the database with sample random data:
 
-Add this to `.env` file:
-
-```env
-SEED=True
+```sh
+flask -A app seed-db
 ```
 
 ### Running the API
@@ -79,21 +77,26 @@ Run flask inside `api/`:
 flask run # or with --debug
 ```
 
+> [!NOTE]\
+> If you encounter `An attempt was made to access a socket in a way forbidden by its access permissions`,
+>
+> Change port where the app is served:
+>
+> ```sh
+> flask run -p 6060  # 6060 or whatever port you want
+> ```
+>
+> API can now be accessed at designated port. Ex: [http://localhost:6060](http://localhost:6060).
+
+
 ### Submitting Changes
 
-After making changes, make sure all tests pass to
-verify that the changes are working as expected,
-and did not break any existing functionality:
-
-```sh
-./.venv/Scripts/pytest
-```
-
-or
+**Verify** that the changes are working as expected,
+and **did not break any existing functionality**:
 
 ```sh
 pytest
 ```
 
-> [!IMPORTANT]\
-> Failing existing tests signifies existing feature breakages.
+> [!CAUTION]\
+> **Failing existing tests signifies existing feature breakages.**
