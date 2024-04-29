@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS product;
 DROP TABLE IF EXISTS cart;
 
-CREATE TABLE user
+CREATE TABLE users
 (
     uid      INTEGER PRIMARY KEY UNIQUE,
     name     VARCHAR(255) NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE user
     updated  TIMESTAMP             DEFAULT NULL
 );
 
-CREATE TABLE product
+CREATE TABLE products
 (
     id          INTEGER PRIMARY KEY,
     name        VARCHAR(255) NOT NULL,
@@ -28,7 +28,7 @@ CREATE TABLE product
     updated     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE cart
+CREATE TABLE carts
 (
     id         INTEGER PRIMARY KEY UNIQUE,
     user_id    INT NOT NULL,

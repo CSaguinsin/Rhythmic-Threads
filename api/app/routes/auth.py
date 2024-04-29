@@ -1,6 +1,6 @@
 from apiflask import APIBlueprint, abort, HTTPBasicAuth
 
-from flask import make_response, session
+from flask import session
 
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -31,7 +31,7 @@ def register(data):
 
         if error is None:
             db.execute(
-                "INSERT INTO user (username, password) VALUES (?, ?)",
+                "INSERT INTO users (username, password) VALUES (?, ?)",
                 (username, generate_password_hash(password)),
             )
             db.commit()
@@ -73,7 +73,7 @@ def login(data):
 
         if error is None:
             user_requested = db.execute(
-                "SELECT * FROM user WHERE username = ?", (username,)
+                "SELECT * FROM users WHERE username = ?", (username,)
             ).fetchone()
 
             if user_requested is None or not check_password_hash(
