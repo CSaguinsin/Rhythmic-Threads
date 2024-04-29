@@ -3,7 +3,7 @@
 ## Development
 
 > [!NOTE]\
-> API Documentation can be accessed at [http://localhost:5000/docs](http://localhost:5000/docs)
+> API Documentation can be accessed at [http://localhost:5000](http://localhost:5000)
 
 Activate virtual environment (inside `./api` directory)
 
