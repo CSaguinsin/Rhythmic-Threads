@@ -12,16 +12,10 @@ class User(Schema):
 
 
 # request input structure for @bp.input
-class UserRequest(Schema):
-    username = fields.String()
-    password = fields.String()
-    name = fields.String()
+class UserRequest(User):
+    exclude = ["uid", "created", "updated"]
 
 
 # response output structure for @bp.output
-class UserResponse(Schema):
-    uid = fields.Integer()
-    username = fields.String()
-    name = fields.String()
-    created = fields.DateTime()
-    updated = fields.DateTime()
+class UserResponse(User):
+    exclude = ["updated"]
