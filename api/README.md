@@ -5,11 +5,14 @@
 > [!NOTE]\
 > API Documentation can be accessed at [http://localhost:5000](http://localhost:5000)
 
-Activate virtual environment (inside `./api` directory)
+Activate virtual environment
 
 ```sh
 python -m venv .venv
 ```
+
+> [!IMPORTANT]\
+> Make sure you execute that command **inside `./api` directory**.
 
 Enter virtual environment:
 
