@@ -112,7 +112,7 @@ def create_product(json_data):
                     json_data["category"],
                     json_data["sx"],
                     json_data["size"],
-                    json_data["price"],
+                    str(json_data["price"]),
                     json_data["ratings"],
                 ),
             )
@@ -122,7 +122,11 @@ def create_product(json_data):
             product = db.execute("SELECT * FROM rt_products WHERE name = ?", (json_data["name"],)).fetchone()
             return ProductResponse().dump(product)
     except Exception as e:
-        abort(500, str(e.__cause__))
+        abort(
+            status_code=500,
+            message=str("An error occurred while creating the product."),
+            detail=(str(e))
+        )
     finally:
         close_db()
 
@@ -158,7 +162,7 @@ def update_product(pid, json_data):
                     product["category"],
                     product["sx"],
                     product["size"],
-                    product["price"],
+                    str(product["price"]),
                     product["ratings"],
                     pid,
                 ),
@@ -172,7 +176,11 @@ def update_product(pid, json_data):
             return ProductResponse().dump(product)
 
     except Exception as e:
-        abort(500, str(e.__cause__))
+        abort(
+            status_code=500,
+            message=str("An error occurred while creating the product."),
+            detail=(str(e))
+        )
     finally:
         close_db()
 

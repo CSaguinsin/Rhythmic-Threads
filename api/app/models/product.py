@@ -12,7 +12,7 @@ class Product(Schema):
     category = fields.String(required=True)
     sx = fields.String(required=True)
     size = fields.String(required=True)
-    price = fields.Decimal(required=True, rounding=decimal.ROUND_FLOOR)
+    price = fields.Decimal(required=True, rounding=decimal.ROUND_FLOOR, as_string=True)
     ratings = fields.Integer(allow_none=True)
     created = fields.DateTime(dump_only=True, dump_default=datetime.now()).format
     updated = fields.DateTime(dump_only=True, dump_default=datetime.now()).format

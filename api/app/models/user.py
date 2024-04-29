@@ -1,5 +1,6 @@
-from apiflask import Schema, fields
 from datetime import datetime
+
+from apiflask import Schema, fields
 
 
 class User(Schema):
@@ -7,8 +8,8 @@ class User(Schema):
     username = fields.String(required=True)
     password = fields.String(required=True)
     name = fields.String(required=True)
-    created = fields.DateTime(dump_only=True, dump_default=datetime.now())
-    updated = fields.DateTime(dump_only=True, dump_default=datetime.now())
+    created = fields.DateTime(dump_only=True, dump_default=datetime.now()).format
+    updated = fields.DateTime(dump_only=True, dump_default=datetime.now()).format
 
 
 # request input structure for @bp.input
