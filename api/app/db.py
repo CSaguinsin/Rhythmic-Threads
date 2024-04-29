@@ -34,6 +34,23 @@ def setup_db_cmd():
     click.echo("Initialized the database.")
 
 
+@click.command("seed-db")
+@click.option("--count", default=5)
+@with_appcontext
+def seed_db_cmd(count):
+    """
+    Creates a CLI command to seed the database with sample data.
+
+    Ex: flask --app api seed-db
+
+    :return:
+    """
+    from app.sql.seed_products import seed_products
+
+    seed_products(count)
+    click.echo("Seeded the database with sample data.")
+
+
 def setup_app(app):
     """
     Register database functions with the application instance.

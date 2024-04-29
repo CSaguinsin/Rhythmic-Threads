@@ -1,15 +1,15 @@
 import os
 from dotenv import load_dotenv
 
+from flask import current_app
 
-class Config:
-    load_dotenv()
+load_dotenv()
 
-    DEBUG = os.getenv("DEBUG")
+# General Config
+DEBUG = os.getenv("DEBUG")
+SECRET_KEY = os.getenv("SECRET_KEY")
+DATABASE = os.path.join(current_app.instance_path, "rt_dev.sqlite")
+SEED = os.getenv("SEED")
+TESTING = False
 
-    # Whether to seed sample data to db
-    SEED = os.getenv("SEED")
-
-    # https://flask.palletsprojects.com/en/2.3.x/quickstart/#sessions
-    # python -c 'import secrets; print(secrets.token_hex())'
-    SECRET_KEY = os.getenv("SECRET_KEY")
+current_app.url_map.strict_slashes = False

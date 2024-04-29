@@ -9,19 +9,21 @@ from app import create_app
 @pytest.fixture()
 def app():
     app = create_app()
-    app.config.update({
-        "DEBUG": False,
-        "TESTING": True,
-        "DATABASE": os.path.join(app.instance_path, "rt_test.sqlite")
-    })
+    app.config.update(
+        TESTING=True,
+        SECRET_KEY="test",
+        DATABASE=os.path.join(app.instance_path, "rt_test.sqlite"),
+        SEED=True,
+    )
 
     # init db
     with app.app_context():
-        if not os.path.exists(app.config["DATABASE"]):
-            from app.db import setup_db
-            setup_db()
+        from app.db import setup_db
+
+        setup_db()
 
         from app.sql.seed_products import seed_products
+
         seed_products(count=5)
 
     yield app
