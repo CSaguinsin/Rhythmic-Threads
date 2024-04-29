@@ -1,6 +1,8 @@
-from apiflask import APIBlueprint, abort, HTTPBasicAuth
+from decimal import Decimal
 
+from apiflask import APIBlueprint, abort, HTTPBasicAuth
 from app.db import get_db, close_db
+
 from ..models.product import ProductResponse
 
 bp = APIBlueprint("products filters", __name__, url_prefix="/products/filter")
@@ -24,16 +26,23 @@ def get_new_arrivals():
 
 
 @bp.get("/ratings/<int:rating>")
+@bp.input({"rating": int}, location="query")
 @bp.output(ProductResponse(many=True))
 @bp.doc(summary="Get all products with a specific rating",
         description="Ratings are comprised of 1 -> 5 as integers, 1 being the lowest, 5 the highest.")
 def get_products_by_rating(ratings):
     try:
-        db = get_db()
-        products = db.execute(
-            "SELECT * FROM product WHERE ratings = ?", (ratings,)
-        ).fetchall()
-        return ProductResponse().dump(products)
+        if ratings < 1 or ratings > 5:
+            abort(
+                status_code=422,
+                message="Ratings must be between 1 and 5",
+            )
+        else:
+            db = get_db()
+            products = db.execute(
+                "SELECT * FROM product WHERE ratings = ?", (ratings,)
+            ).fetchall()
+            return ProductResponse().dump(products)
     except Exception as e:
         return str(e.__cause__)
     finally:
@@ -41,6 +50,7 @@ def get_products_by_rating(ratings):
 
 
 @bp.get("/category/<string:category>")
+@bp.input({"category": str}, location="query")
 @bp.output(ProductResponse(many=True))
 @bp.doc(summary="Get all products in a specific category")
 def get_products_by_category(category):
@@ -57,8 +67,9 @@ def get_products_by_category(category):
 
 
 @bp.get("/sx/<string:sx>")
+@bp.input({"sx": str}, location="query")
 @bp.output(ProductResponse(many=True))
-@bp.doc(summary="Get all products within a specific sex")
+@bp.doc(summary="Get all products within a specific sex", description="Sexes are 'M', 'F', 'U' for unisex.")
 def get_products_by_sx(sx):
     try:
         db = get_db()
@@ -71,8 +82,10 @@ def get_products_by_sx(sx):
 
 
 @bp.get("/size/<string:size>")
+@bp.input({"size": str}, location="query")
 @bp.output(ProductResponse(many=True))
-@bp.doc(summary="Get all products with a specific size")
+@bp.doc(summary="Get all products with a specific size",
+        description="Sizes are in the format of 'S', 'M', 'L', 'XL', etc.")
 def get_products_by_size(size):
     try:
         db = get_db()
@@ -87,13 +100,14 @@ def get_products_by_size(size):
 
 
 @bp.get("/price/<float:starting_price>-<float:ending_price>")
+@bp.input({"starting_price": Decimal, "ending_price": Decimal}, location="query")
 @bp.output(ProductResponse(many=True))
 @bp.doc(summary="Get all products within a specific price range")
 def get_products_by_price_range(starting_price, ending_price):
     try:
         if starting_price >= ending_price:
             abort(
-                status_code=400,
+                status_code=422,
                 message="Starting price cannot be greater than or equal the ending price",
             )
         else:
