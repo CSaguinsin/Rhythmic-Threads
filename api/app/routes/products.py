@@ -1,8 +1,7 @@
 from apiflask import APIBlueprint, abort, HTTPBasicAuth
+from app.db import get_db, close_db
 from flask import jsonify
 from marshmallow import ValidationError
-
-from app.db import get_db, close_db
 
 from ..models.product import ProductResponse, ProductRequest
 
@@ -16,7 +15,8 @@ auth = HTTPBasicAuth()
 def get_products():
     try:
         db = get_db()
-        products = db.execute("SELECT * FROM products").fetchall()
+        products = db.execute("SELECT id, name, description, collection, category, sx, size, price, ratings, created "
+                              "FROM products").fetchall()
         return ProductResponse().dump(products)
     except Exception as e:
         return str(e.__cause__)
@@ -30,7 +30,8 @@ def get_products():
 def get_product_by_id(pid):
     try:
         db = get_db()
-        product = db.execute("SELECT * FROM products WHERE id = ?", (pid,)).fetchone()
+        product = db.execute("SELECT id, name, description, collection, category, sx, size, price, ratings, created "
+                             "FROM products WHERE id = ?", (pid,)).fetchone()
         return ProductResponse().dump(product)
     except Exception as e:
         return str(e.__cause__)
@@ -116,7 +117,9 @@ def update_product(pid, product):
             db.commit()
 
             # Get the updated product
-            product = db.execute("SELECT * FROM products WHERE id = ?", (pid,)).fetchone()
+            product = db.execute(
+                "SELECT id, name, description, collection, category, sx, size, price, ratings, created "
+                "FROM products WHERE id = ?", (pid,)).fetchone()
             return ProductResponse().dump(product)
 
     except Exception as e:

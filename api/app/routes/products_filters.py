@@ -16,7 +16,8 @@ def get_new_arrivals():
     try:
         db = get_db()
         products = db.execute(
-            "SELECT * FROM products WHERE created >= datetime('now', '-7 days')"
+            "SELECT id, name, description, collection, category, sx, size, price, ratings, created "
+            "FROM products WHERE created >= datetime('now', '-7 days')"
         ).fetchall()
         return ProductResponse().dump(products)
     except Exception as e:
@@ -40,7 +41,8 @@ def get_products_by_rating(ratings):
         else:
             db = get_db()
             products = db.execute(
-                "SELECT * FROM products WHERE ratings = ?", (ratings,)
+                "SELECT id, name, description, collection, category, sx, size, price, ratings, created "
+                "FROM products WHERE ratings = ?", (ratings,)
             ).fetchall()
             return ProductResponse().dump(products)
     except Exception as e:
@@ -57,7 +59,8 @@ def get_products_by_category(category):
     try:
         db = get_db()
         products = db.execute(
-            "SELECT * FROM products WHERE category = ?", (category,)
+            "SELECT id, name, description, collection, category, sx, size, price, ratings, created "
+            "FROM products WHERE category = ?", (category,)
         ).fetchall()
         return ProductResponse().dump(products)
     except Exception as e:
@@ -74,7 +77,8 @@ def get_products_by_collection(collection):
     try:
         db = get_db()
         products = db.execute(
-            "SELECT * FROM products WHERE collection = ?", (collection,)
+            "SELECT id, name, description, collection, category, sx, size, price, ratings, created "
+            "FROM products WHERE collection = ?", (collection,)
         ).fetchall()
         return ProductResponse().dump(products)
     except Exception as e:
@@ -90,7 +94,8 @@ def get_products_by_collection(collection):
 def get_products_by_sx(sx):
     try:
         db = get_db()
-        products = db.execute("SELECT * FROM products WHERE sx = ?", (sx,)).fetchall()
+        products = db.execute("SELECT id, name, description, collection, category, sx, size, price, ratings, created "
+                              "FROM products WHERE sx = ?", (sx,)).fetchall()
         return ProductResponse().dump(products)
     except Exception as e:
         return str(e.__cause__)
@@ -107,7 +112,8 @@ def get_products_by_size(size):
     try:
         db = get_db()
         products = db.execute(
-            "SELECT * FROM products WHERE size = ?", (size,)
+            "SELECT id, name, description, collection, category, sx, size, price, ratings, created "
+            "FROM products WHERE size = ?", (size,)
         ).fetchall()
         return ProductResponse().dump(products)
     except Exception as e:
@@ -130,7 +136,8 @@ def get_products_by_price_range(starting_price, ending_price):
         else:
             db = get_db()
             products = db.execute(
-                "SELECT * FROM products WHERE price BETWEEN ? AND ?",
+                "SELECT id, name, description, collection, category, sx, size, price, ratings, created "
+                "FROM products WHERE price BETWEEN ? AND ?",
                 (starting_price, ending_price),
             ).fetchall()
             return ProductResponse().dump(products)
