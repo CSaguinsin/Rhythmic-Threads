@@ -26,7 +26,7 @@ def setup_db_cmd():
     """
     Creates a CLI command to initialize the database.
 
-    Ex: flask --app api init-db
+    Ex: flask --app api setup-db
 
     :return:
     """
