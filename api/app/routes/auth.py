@@ -1,5 +1,5 @@
 from apiflask import APIBlueprint, abort, HTTPBasicAuth
-from flask import session
+from flask import session, jsonify
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from app.db import get_db, close_db
@@ -50,7 +50,7 @@ def register(data):
 
 @bp.post("/login")
 @bp.input(UserRequest, location="json")
-@bp.output(UserResponse, 200)
+@bp.output({}, 200)
 @auth.verify_password
 @bp.doc(
     summary="Login a user",
@@ -71,7 +71,7 @@ def login(data):
 
         if error is None:
             user_requested = db.execute(
-                "SELECT * FROM rt_users WHERE username = ?", (username,)
+                "SELECT id, name, email, username FROM rt_users WHERE username = ?", (username,)
             ).fetchone()
 
             if user_requested is None or not check_password_hash(
@@ -79,8 +79,10 @@ def login(data):
             ):
                 abort(401, "Incorrect username or password.")
             else:
-                session["username"] = user_requested["username"]
-                return UserResponse().dump(user_requested)
+                session["user"] = user_requested
+
+                # return a 200 status code on successful login
+                return jsonify({}), 200
         else:
             # If user or password is missing
             abort(401, error)

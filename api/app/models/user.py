@@ -4,7 +4,7 @@ from apiflask import Schema, fields
 
 
 class User(Schema):
-    uid = fields.Integer(dump_only=True)
+    id = fields.Integer(dump_only=True)
     username = fields.String(required=True)
     password = fields.String(required=True)
     name = fields.String(required=True)
@@ -14,9 +14,9 @@ class User(Schema):
 
 # request input structure for @bp.input
 class UserRequest(User):
-    exclude = ["uid", "created", "updated"]
+    exclude = ["id", "created", "updated"]
 
 
 # response output structure for @bp.output
 class UserResponse(User):
-    exclude = ["updated"]
+    exclude = ["password", "updated"]
