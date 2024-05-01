@@ -37,11 +37,11 @@ def create_app():
     db.setup_app(app)
 
     # Blueprints / Routes
-    from app.routes import auth
-    from app.routes import products
+    from app.routes import auth, products, cart
 
     app.register_blueprint(auth.bp)
     app.register_blueprint(products.bp)
+    app.register_blueprint(cart.bp)
 
     # don't run app in production server deployments
     if __name__ == "__main__":
