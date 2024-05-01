@@ -24,7 +24,7 @@ def get_cart():
         # get the user's shopping cart items and join with the cart items table
         cart = db.execute(
             "SELECT cart.id, cart.user_id, cart_item.* "
-            "FROM rt_carts cart JOIN rt_cart_items cart_item ON cart.cart_items = cart_item.id "
+            "FROM rt_carts cart JOIN rt_cart_item cart_item ON cart.cart_items = cart_item.id "
             "WHERE cart.user_id = ?",
             (user_id,),
         ).fetchall()
@@ -73,7 +73,7 @@ def add_to_cart(json_data):
 
                 # check if the product is already added
                 existing_product = db.execute(
-                    "SELECT qty FROM rt_cart_items WHERE product_id = ? AND cart_id = ?",
+                    "SELECT qty FROM rt_cart_item WHERE product_id = ? AND cart_id = ?",
                     (json_data["product_id"],),
                     (json_data["cart_id"],),
                 ).fetchone()
@@ -81,13 +81,13 @@ def add_to_cart(json_data):
                 # if the product is already added, update the quantity
                 if existing_product:
                     db.execute(
-                        "UPDATE rt_cart_items SET qty = ? WHERE product_id = ? AND cart_id = ?",
+                        "UPDATE rt_cart_item SET qty = ? WHERE product_id = ? AND cart_id = ?",
                         (existing_product["qty"] + json_data["qty"], json_data["product_id"], cart_id),
                     )
                 else:
                     # if the product is not added, add the product to the cart
                     db.execute(
-                        "INSERT INTO rt_cart_items (product_id, qty) VALUES (?, ?, ?)",
+                        "INSERT INTO rt_cart_item (product_id, qty) VALUES (?, ?, ?)",
                         (cart_id, json_data["product_id"], json_data["qty"]),
                     )
 
@@ -123,7 +123,7 @@ def remove_from_cart(query_data):
 
         # remove the product from the cart
         db.execute(
-            "DELETE FROM rt_cart_items WHERE cart_id = ? AND product_id = ?",
+            "DELETE FROM rt_cart_item WHERE cart_id = ? AND product_id = ?",
             (cart_id, product_id),
         )
         db.commit()
