@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS rt_users;
 DROP TABLE IF EXISTS rt_products;
 DROP TABLE IF EXISTS rt_carts;
+DROP TABLE IF EXISTS rt_cart_items;
 
 CREATE TABLE rt_users
 (
@@ -39,7 +40,7 @@ CREATE TABLE rt_carts
     FOREIGN KEY (cart_items) REFERENCES rt_cart_item (id)
 );
 
-CREATE TABLE rt_cart_item
+CREATE TABLE rt_cart_items
 (
     id         INT PRIMARY KEY UNIQUE,
     cart_id    INT       NOT NULL,
