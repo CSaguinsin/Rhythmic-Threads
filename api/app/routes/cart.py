@@ -148,7 +148,7 @@ def __validate_cart(cart):
     """
 
     try:
-        CartRequest().load(cart)
+        CartItemRequest().load(cart)
         return None
     except ValidationError as e:
         return jsonify(e.messages)
