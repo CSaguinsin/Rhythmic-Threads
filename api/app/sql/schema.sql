@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS rt_cart_items;
 CREATE TABLE rt_users
 (
     id       INT PRIMARY KEY UNIQUE,
-    name     TEXT NULLABLE,
+    name     TEXT      NOT NULL,
     email    TEXT      NOT NULL,
     username TEXT      NOT NULL,
     password TEXT      NOT NULL,
@@ -18,13 +18,13 @@ CREATE TABLE rt_products
 (
     id          INT PRIMARY KEY UNIQUE,
     name        TEXT           NOT NULL,
-    description TEXT NULLABLE DEFAULT NULL,
-    collection  TEXT NULLABLE DEFAULT NULL,
+    description TEXT           NOT NULL,
+    collection  TEXT           NOT NULL,
     category    TEXT           NOT NULL,
     sx          TEXT           NOT NULL,
     size        TEXT           NOT NULL,
     price       DECIMAL(10, 2) NOT NULL,
-    ratings     INT            NOT NULL DEFAULT 0,
+    ratings     INT,
     created     TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated     TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -45,7 +45,7 @@ CREATE TABLE rt_cart_items
     id         INT PRIMARY KEY UNIQUE,
     cart_id    INT       NOT NULL,
     product_id INT       NOT NULL,
-    qty        INT       NOT NULL DEFAULT 1,
+    qty        INT       NOT NULL,
     date_added TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (cart_id) REFERENCES rt_carts (id),
     FOREIGN KEY (product_id) REFERENCES rt_products (id)
