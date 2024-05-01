@@ -84,7 +84,7 @@ def get_product_by_id(pid):
         close_db()
 
 
-@bp.post("/")
+@bp.post("")
 @bp.input(ProductRequest, location="json")
 @bp.output(ProductResponse, 201)
 @bp.doc(summary="Create a new product")
