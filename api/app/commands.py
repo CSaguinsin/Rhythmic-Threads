@@ -12,7 +12,7 @@ def setup_db_cmd():
 
     :return:
     """
-    from db import setup_db
+    from app.db import setup_db
 
     setup_db()
     click.echo("Initialized the database.")
@@ -51,7 +51,7 @@ def create_user_cmd(user, pw, name):
     :param name:
     :return:
     """
-    from db import get_db
+    from app.db import get_db
     from app.models.user import UserRequest
 
     db = get_db()
