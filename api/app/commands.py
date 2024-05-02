@@ -1,5 +1,6 @@
 import click
 from flask.cli import with_appcontext
+from werkzeug.security import generate_password_hash
 
 
 @click.command("setup-db")
@@ -36,17 +37,17 @@ def seed_db_cmd(count):
 
 
 @click.command("create-user")
-@click.option("--user", prompt="Enter username")
+@click.option("--username", prompt="Enter username")
 @click.option("--pw", prompt="Enter password", hide_input=True, confirmation_prompt=True)
 @click.option("--name", prompt="Enter full name", required=False)
 @with_appcontext
-def create_user_cmd(user, pw, name):
+def create_user_cmd(username, pw, name):
     """
     Creates a CLI command to create a new user.
 
     Ex: flask --app api create-user
 
-    :param user:
+    :param username:
     :param pw:
     :param name:
     :return:
@@ -57,15 +58,20 @@ def create_user_cmd(user, pw, name):
     db = get_db()
 
     try:
-        user_data = UserRequest().load({"username": user, "password": pw, "name": name})
+        user_data = UserRequest().load({"username": username, "password": pw, "name": name})
+        hashed_pw = generate_password_hash(user_data["password"])
+
         db.execute(
             "INSERT INTO rt_users (username, password, name) VALUES (?, ?, ?)",
-            (user_data["username"], user_data["password"], user_data["name"]),
+            (user_data["username"], hashed_pw, user_data["name"]),
         )
+
         db.commit()
-        click.echo(f"User {user} created successfully.")
+        click.echo(f"User {username} created successfully.")
+
     except Exception as e:
-        click.echo(f"Failed to create user {user}.")
-        click.echo(str(e))
+        click.echo(f"Failed to create user {username}.")
+        click.echo(e)
+
     finally:
         db.close()
