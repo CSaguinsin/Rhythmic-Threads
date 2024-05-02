@@ -1,5 +1,8 @@
 # Rhythmic Threads API
 
+> [!CAUTION]\
+> Login functionality is not yet implemented. All actions/endpoints can be accessed without authentication.
+
 ## Development
 
 > [!NOTE]\
@@ -87,7 +90,6 @@ flask run # or with --debug
 > ```
 >
 > API can now be accessed at designated port. Ex: [http://localhost:6060](http://localhost:6060).
-
 
 ### Submitting Changes
 

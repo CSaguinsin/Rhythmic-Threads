@@ -16,11 +16,3 @@ class Product(Schema):
     ratings = fields.Integer(allow_none=True)
     created = fields.DateTime(dump_only=True, dump_default=datetime.now()).format
     updated = fields.DateTime(dump_only=True, dump_default=datetime.now()).format
-
-
-class ProductRequest(Product):
-    exclude = ["id", "created", "updated"]
-
-
-class ProductResponse(Product):
-    exclude = ["updated"]
