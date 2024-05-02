@@ -4,14 +4,14 @@ from flask import jsonify
 from marshmallow import ValidationError
 
 from app.db import get_db, close_db
-from app.models.product import ProductResponse, ProductRequest
+from app.models.product import Product
 
 bp = APIBlueprint("products", __name__, url_prefix="/products")
 
 
 @bp.get("")
 @bp.input({"ratings": Integer(), "category": String(), "collection": String(), "price": String()}, location="query")
-@bp.output(ProductResponse(many=True))
+@bp.output(Product(many=True))
 @bp.doc(summary="Get all products",
         description="You can filter products based on provided name parameters.\n\n"
                     "Ex. /products?ratings=4&category=Clothing&collection=Summer 2023&price=100-200")
@@ -58,7 +58,7 @@ def get_products(query_data):
 
     try:
         products = db.execute(query, params).fetchall()
-        return ProductResponse(many=True).dump(products)
+        return Product(many=True).dump(products)
     except Exception as e:
         return str(e.__cause__)
     finally:
@@ -66,7 +66,7 @@ def get_products(query_data):
 
 
 @bp.get("/<int:pid>")
-@bp.output(ProductResponse)
+@bp.output(Product)
 @bp.doc(summary="Get a product by ID")
 def get_product_by_id(pid):
     try:
@@ -75,7 +75,7 @@ def get_product_by_id(pid):
                              "FROM rt_products WHERE id = ?", (pid,)).fetchone()
 
         if product is not None:
-            return ProductResponse().dump(product)
+            return Product().dump(product)
         else:
             return jsonify({"message": f"Product {pid} not found."})
     except Exception as e:
@@ -85,8 +85,8 @@ def get_product_by_id(pid):
 
 
 @bp.post("")
-@bp.input(ProductRequest, location="json")
-@bp.output(ProductResponse, 201)
+@bp.input(Product, location="json")
+@bp.output(Product, 201)
 @bp.doc(summary="Create a new product")
 def create_product(json_data):
     error = __validate_product(json_data)
@@ -120,7 +120,7 @@ def create_product(json_data):
 
             # Get the product that was just created
             product = db.execute("SELECT * FROM rt_products WHERE name = ?", (json_data["name"],)).fetchone()
-            return ProductResponse().dump(product)
+            return Product().dump(product)
     except Exception as e:
         abort(
             status_code=500,
@@ -132,8 +132,8 @@ def create_product(json_data):
 
 
 @bp.patch("/<int:pid>")
-@bp.input(ProductRequest, location="json")
-@bp.output(ProductResponse)
+@bp.input(Product, location="json")
+@bp.output(Product)
 @bp.doc(summary="Update a product by ID")
 def update_product(pid, json_data):
     product = json_data
@@ -173,7 +173,7 @@ def update_product(pid, json_data):
             product = db.execute(
                 "SELECT id, name, description, collection, category, sx, size, price, ratings, created "
                 "FROM rt_products WHERE id = ?", (pid,)).fetchone()
-            return ProductResponse().dump(product)
+            return Product().dump(product)
 
     except Exception as e:
         abort(
@@ -209,7 +209,18 @@ def __validate_product(product):
     """
 
     try:
-        ProductRequest().load(product)
+        Product(
+            only=(
+                "name",
+                "description",
+                "collection",
+                "category",
+                "sx",
+                "size",
+                "price",
+                "ratings"
+            )
+        ).load(product)
         return None
     except ValidationError as e:
         return jsonify(e.messages)

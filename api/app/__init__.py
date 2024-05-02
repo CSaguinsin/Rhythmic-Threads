@@ -1,8 +1,6 @@
 import os
 
-from apiflask import APIFlask, HTTPBasicAuth
-
-auth = HTTPBasicAuth()
+from apiflask import APIFlask
 
 
 def create_app():

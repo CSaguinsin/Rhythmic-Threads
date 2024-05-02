@@ -1,25 +1,24 @@
 from apiflask import APIBlueprint, abort
-from flask import jsonify, session
+from flask import jsonify
 from marshmallow import ValidationError
 from marshmallow.fields import Integer
 
 from app.db import get_db, close_db
-from app import auth
 from app.models.cart import CartRequest, CartItemRequest
 
 bp = APIBlueprint("cart", __name__, url_prefix="/cart")
 
 
 @bp.get("")
+@bp.input({"user_id": Integer()}, location="query")
 @bp.output(CartRequest(many=True))
-@bp.auth_required(auth)
 @bp.doc(summary="Get the user's shopping cart items")
-def get_cart():
+def get_cart(query_data):
     db = get_db()
 
     try:
         # get current user's id
-        user_id = session.get("user")["id"]
+        user_id = query_data["user_id"]
 
         # get the user's shopping cart items and join with the cart items table
         cart = db.execute(
@@ -34,7 +33,7 @@ def get_cart():
         abort(
             500,
             message="An error occurred while fetching the user's shopping cart items",
-            detail=e,
+            detail=str(e),
         )
 
     finally:
@@ -42,14 +41,15 @@ def get_cart():
 
 
 @bp.post("")
+@bp.input({"user_id": Integer()}, location="query")
 @bp.input(CartItemRequest, location="json")
-@bp.auth_required(auth)
 @bp.doc(summary="Add or update an item to the user's shopping cart",
         description="Add product to the user's shopping cart, update "
                     "the quantity if the product is already added.\n\n"
                     "This requires a logged-in user to get the current user id.")
-def add_to_cart(json_data):
+def add_to_cart(query_data, json_data):
     db = get_db()
+    user_id = query_data["user_id"]
 
     try:
         error = __validate_cart(json_data)
@@ -64,12 +64,12 @@ def add_to_cart(json_data):
         else:
             # check if cart exists for the current user, get cart ID
             cart_id = db.execute(
-                "SELECT id FROM rt_carts WHERE user_id = ?", (session.get("user_id"),)
+                "SELECT id FROM rt_carts WHERE user_id = ?", (user_id,)
             ).fetchone()
 
             if not cart_id:
                 # create a new cart for the user, if not found
-                db.execute("INSERT INTO rt_carts (user_id) VALUES (?)", (session.get("user_id"),))
+                db.execute("INSERT INTO rt_carts (user_id) VALUES (?)", (user_id,))
 
                 # check if the product is already added
                 existing_product = db.execute(
@@ -97,7 +97,7 @@ def add_to_cart(json_data):
         abort(
             500,
             message="An error occurred while adding the item to the user's shopping cart",
-            detail=e,
+            detail=str(e),
         )
 
     finally:
@@ -105,16 +105,15 @@ def add_to_cart(json_data):
 
 
 @bp.delete("")
-@bp.input({"product_id": Integer()}, location="query")
-@bp.auth_required(auth)
+@bp.input({"user_id": Integer(), "product_id": Integer()}, location="query")
 @bp.doc(summary="Remove an item from the user's shopping cart",
         description="Remove a product from the user's shopping cart by providing the product id.")
 def remove_from_cart(query_data):
     db = get_db()
 
     try:
-        user_id = session.get("user")["id"]
         product_id = query_data["pid"]
+        user_id = query_data["user_id"]
 
         # get the cart for the current user
         cart_id = db.execute(
@@ -132,7 +131,7 @@ def remove_from_cart(query_data):
         abort(
             500,
             message="An error occurred while removing the item from the user's shopping cart",
-            detail=e,
+            detail=str(e),
         )
 
     finally:

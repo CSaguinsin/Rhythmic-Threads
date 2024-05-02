@@ -12,7 +12,7 @@ def default_user(client):
     client.post(
         "/auth/register",
         json={
-            "email": "admin@admin.com",
+            "username": "admin@admin.com",
             "password": "admin",
             "name": "admin"
         })
@@ -22,7 +22,7 @@ def test_register(client):
     response = client.post(
         "/auth/register",
         json={
-            "email": "admin2@admin.com",
+            "username": "admin2@admin.com",
             "password": "admin2",
             "name": "admin2"
         })
@@ -33,7 +33,7 @@ def test_login(default_user, client):
     response = client.post(
         "/auth/login",
         json={
-            "email": "admin@admin.com",
+            "username": "admin@admin.com",
             "password": "admin",
         })
 
