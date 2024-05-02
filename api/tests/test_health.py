@@ -16,7 +16,7 @@ def test_db_seed(cli):
 
     :param cli: Flask CLI runner fixture
     """
-    from commands import seed_db_cmd
+    from app.commands import seed_db_cmd
 
     result = cli.invoke(seed_db_cmd)
     assert "Seeded the database with sample data." in result.output
