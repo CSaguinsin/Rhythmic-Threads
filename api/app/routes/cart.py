@@ -1,13 +1,13 @@
-from apiflask import APIBlueprint, abort, HTTPBasicAuth
+from apiflask import APIBlueprint, abort
 from flask import jsonify, session
 from marshmallow import ValidationError
 from marshmallow.fields import Integer
 
 from app.db import get_db, close_db
+from app import auth
 from app.models.cart import CartRequest, CartItemRequest
 
 bp = APIBlueprint("cart", __name__, url_prefix="/cart")
-auth = HTTPBasicAuth()
 
 
 @bp.get("")

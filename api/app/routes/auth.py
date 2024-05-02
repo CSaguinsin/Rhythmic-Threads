@@ -1,13 +1,13 @@
-from apiflask import APIBlueprint, abort, HTTPBasicAuth
+from apiflask import APIBlueprint, abort
 from flask import session
 from werkzeug.security import check_password_hash, generate_password_hash
 
+from app import auth
 from app.db import get_db, close_db
 from app.models.generic import GenericResponse
-from app.models.user import UserRequest, UserResponse
+from app.models.user import UserRequest, UserResponse, UserLoginRequest
 
 bp = APIBlueprint("auth", __name__, url_prefix="/auth")
-auth = HTTPBasicAuth()
 
 
 @bp.post("/register")
@@ -15,7 +15,7 @@ auth = HTTPBasicAuth()
 @bp.output(GenericResponse, 201)
 @bp.doc(summary="Register a new user")
 def register(json_data):
-    email = json_data["email"]
+    username = json_data["username"]
     password = json_data["password"]
     name = json_data["name"]
 
@@ -23,7 +23,7 @@ def register(json_data):
     error = None
 
     try:
-        if not email:
+        if not username:
             error = "Email is required."
         elif not password:
             error = "Password is required."
@@ -32,18 +32,18 @@ def register(json_data):
 
         if error is None:
             db.execute(
-                "INSERT INTO rt_users (email, name, password) VALUES (?, ?, ?)",
-                (email, name, generate_password_hash(password)),
+                "INSERT INTO rt_users (username, name, password) VALUES (?, ?, ?)",
+                (username, name, generate_password_hash(password)),
             )
             db.commit()
             return GenericResponse().dump(
-                {"message": f"User {email} successfully registered."}
+                {"message": f"User {username} successfully registered."}
             )
         else:
             # If user or password is missing
             abort(401, error)
     except db.IntegrityError:
-        abort(400, f"User {email} is already registered.")
+        abort(400, f"User {username} is already registered.")
     except Exception as e:
         # Unknown error
         abort(500, str(e.__cause__))
@@ -52,45 +52,22 @@ def register(json_data):
 
 
 @bp.post("/login")
-@bp.input(UserRequest, location="json")
+@bp.input(UserLoginRequest, location="json")
 @bp.output(UserResponse, 200)
-@auth.verify_password
 @bp.doc(
     summary="Login a user",
-    description="Login a user with an email and password.",
+    description="Login a user with an username and password.",
 )
 def login(json_data):
-    email = json_data["email"]
+    username = json_data["username"]
     password = json_data["password"]
 
-    db = get_db()
-    error = None
-
     try:
-        if not email:
-            error = "Email is required."
-        elif not password:
-            error = "Password is required."
-
-        if error is None:
-            user_requested = db.execute(
-                "SELECT id, name, email, password FROM rt_users WHERE email = ?", (email,)
-            ).fetchone()
-
-            if user_requested is None or not check_password_hash(
-                user_requested["password"], password
-            ):
-                abort(401, "Incorrect username or password.")
-            else:
-                session["user"] = UserResponse().dump(user_requested)
-
-                # return a 200 status code on successful login
-                return UserResponse().dump(user_requested)
-        else:
-            # If user or password is missing
-            abort(401, error)
-    finally:
-        close_db()
+        user = verify_password(username, password)
+        session["user"] = user
+        return user
+    except Exception as e:
+        abort(500, message="An error occurred while logging in the user.", detail=e)
 
 
 @bp.get("/logout")
@@ -103,7 +80,7 @@ def login(json_data):
 def logout():
     session.clear()
     return GenericResponse().dump(
-        {"message": f"User {auth.current_user['email']} successfully logged out."}
+        {"message": f"User {auth.current_user['username']} successfully logged out."}
     )
 
 
@@ -112,4 +89,59 @@ def logout():
 @bp.auth_required(auth)
 @bp.doc(summary="Get currently logged-in user information")
 def user_session():
-    return UserResponse().dump(auth.current_user)
+    try:
+        return UserResponse().dump(auth.current_user)
+    except Exception as e:
+        abort(
+            500,
+            message="An error occurred while fetching the user's information",
+            detail=e,
+        )
+
+
+@auth.verify_password
+def verify_password(username, password):
+    """
+    Verify the user's password.
+    This is used by the HTTPBasicAuth.verify_password decorator.
+
+    This 2-params function is required for the HTTPBasicAuth.verify_password decorator.
+
+    :param username:
+    :param password:
+    :return:
+    """
+    db = get_db()
+    error = None
+
+    try:
+        if not username:
+            error = "Email is required."
+        elif not password:
+            error = "Password is required."
+
+        if error is None:
+            user_requested = db.execute(
+                "SELECT id, name, username, password FROM rt_users WHERE username = ?", (username,)
+            ).fetchone()
+
+            if user_requested is None or not check_password_hash(
+                user_requested["password"], password
+            ):
+                abort(401, "Incorrect username or password.")
+            else:
+                return UserResponse().dump(user_requested)
+        else:
+            # If user or password is missing
+            abort(401, error)
+
+    except Exception as e:
+        # Unknown error
+        abort(
+            500,
+            message="An error occurred while logging in the user.",
+            detail=e,
+        )
+
+    finally:
+        close_db()
