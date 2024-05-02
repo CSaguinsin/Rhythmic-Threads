@@ -1,10 +1,10 @@
 from apiflask import APIBlueprint, abort, HTTPBasicAuth
-from flask import session, jsonify
+from flask import session
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from app.db import get_db, close_db
-from ..models.generic import GenericResponse
-from ..models.user import UserRequest, UserResponse
+from app.models.generic import GenericResponse
+from app.models.user import UserRequest, UserResponse
 
 bp = APIBlueprint("auth", __name__, url_prefix="/auth")
 auth = HTTPBasicAuth()
@@ -14,9 +14,10 @@ auth = HTTPBasicAuth()
 @bp.input(UserRequest, location="json")
 @bp.output(GenericResponse, 201)
 @bp.doc(summary="Register a new user")
-def register(data):
-    email = data["email"]
-    password = data["password"]
+def register(json_data):
+    email = json_data["email"]
+    password = json_data["password"]
+    name = json_data["name"]
 
     db = get_db()
     error = None
@@ -26,11 +27,13 @@ def register(data):
             error = "Email is required."
         elif not password:
             error = "Password is required."
+        elif not name:
+            name = None
 
         if error is None:
             db.execute(
-                "INSERT INTO rt_users (email, password) VALUES (?, ?)",
-                (email, generate_password_hash(password)),
+                "INSERT INTO rt_users (email, name, password) VALUES (?, ?, ?)",
+                (email, name, generate_password_hash(password)),
             )
             db.commit()
             return GenericResponse().dump(
@@ -50,15 +53,15 @@ def register(data):
 
 @bp.post("/login")
 @bp.input(UserRequest, location="json")
-@bp.output({}, 200)
+@bp.output(UserResponse, 200)
 @auth.verify_password
 @bp.doc(
     summary="Login a user",
-    description="Login a user with a username and password.",
+    description="Login a user with an email and password.",
 )
-def login(data):
-    email = data["email"]
-    password = data["password"]
+def login(json_data):
+    email = json_data["email"]
+    password = json_data["password"]
 
     db = get_db()
     error = None
@@ -71,7 +74,7 @@ def login(data):
 
         if error is None:
             user_requested = db.execute(
-                "SELECT id, name, email FROM rt_users WHERE username = ?", (email,)
+                "SELECT id, name, email, password FROM rt_users WHERE email = ?", (email,)
             ).fetchone()
 
             if user_requested is None or not check_password_hash(
@@ -79,10 +82,10 @@ def login(data):
             ):
                 abort(401, "Incorrect username or password.")
             else:
-                session["user"] = user_requested
+                session["user"] = UserResponse().dump(user_requested)
 
                 # return a 200 status code on successful login
-                return jsonify({}), 200
+                return UserResponse().dump(user_requested)
         else:
             # If user or password is missing
             abort(401, error)
@@ -108,5 +111,5 @@ def logout():
 @bp.output(UserResponse, 200)
 @bp.auth_required(auth)
 @bp.doc(summary="Get currently logged-in user information")
-def user():
+def user_session():
     return UserResponse().dump(auth.current_user)

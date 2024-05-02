@@ -7,7 +7,7 @@ class User(Schema):
     id = fields.Integer(dump_only=True)
     email = fields.Email(required=True)
     password = fields.String(required=True)
-    name = fields.String(required=True)
+    name = fields.String(required=False, allow_none=True)
     created = fields.DateTime(dump_only=True, dump_default=datetime.now()).format
     updated = fields.DateTime(dump_only=True, dump_default=datetime.now()).format
 
