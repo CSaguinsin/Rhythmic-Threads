@@ -3,7 +3,7 @@ from flask import jsonify, session
 from marshmallow import ValidationError
 from marshmallow.fields import Integer
 
-from app.db import get_db
+from app.db import get_db, close_db
 from app.models.cart import CartRequest, CartItemRequest
 
 bp = APIBlueprint("cart", __name__, url_prefix="/cart")
@@ -101,7 +101,7 @@ def add_to_cart(json_data):
         )
 
     finally:
-        db.close()
+        close_db()
 
 
 @bp.delete("")
@@ -136,7 +136,7 @@ def remove_from_cart(query_data):
         )
 
     finally:
-        db.close()
+        close_db()
 
 
 def __validate_cart(cart):
