@@ -87,7 +87,7 @@ def add_to_cart(json_data):
                 else:
                     # if the product is not added, add the product to the cart
                     db.execute(
-                        "INSERT INTO rt_cart_items (product_id, qty) VALUES (?, ?, ?)",
+                        "INSERT INTO rt_cart_items (product_id, qty) VALUES (?, ?)",
                         (cart_id, json_data["product_id"], json_data["qty"]),
                     )
 
