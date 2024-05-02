@@ -1,8 +1,8 @@
 import sqlite3
 
-import click
 from flask import current_app, g
-from flask.cli import with_appcontext
+
+from commands import setup_db_cmd
 
 
 def setup_db():
@@ -18,37 +18,6 @@ def setup_db():
         db.executescript(f.read().decode("utf8"))
 
     db.commit()
-
-
-@click.command("setup-db")
-@with_appcontext
-def setup_db_cmd():
-    """
-    Creates a CLI command to initialize the database.
-
-    Ex: flask --app api setup-db
-
-    :return:
-    """
-    setup_db()
-    click.echo("Initialized the database.")
-
-
-@click.command("seed-db")
-@click.option("--count", default=5)
-@with_appcontext
-def seed_db_cmd(count):
-    """
-    Creates a CLI command to seed the database with sample data.
-
-    Ex: flask --app api seed-db
-
-    :return:
-    """
-    from app.sql.seed_products import seed_products
-
-    seed_products(count)
-    click.echo("Seeded the database with sample data.")
 
 
 def setup_app(app):
