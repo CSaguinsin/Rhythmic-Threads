@@ -1,7 +1,4 @@
 # Test if app starts without errors
-from unittest import result
-
-
 def test_app_health(client):
     """
     Test if the app starts without errors.
@@ -19,7 +16,7 @@ def test_db_seed(cli):
 
     :param cli: Flask CLI runner fixture
     """
-    from app.db import seed_db_cmd
+    from commands import seed_db_cmd
 
     result = cli.invoke(seed_db_cmd)
     assert "Seeded the database with sample data." in result.output
