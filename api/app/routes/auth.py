@@ -15,32 +15,32 @@ auth = HTTPBasicAuth()
 @bp.output(GenericResponse, 201)
 @bp.doc(summary="Register a new user")
 def register(data):
-    username = data["username"]
+    email = data["email"]
     password = data["password"]
 
     db = get_db()
     error = None
 
     try:
-        if not username:
-            error = "Username is required."
+        if not email:
+            error = "Email is required."
         elif not password:
             error = "Password is required."
 
         if error is None:
             db.execute(
-                "INSERT INTO rt_users (username, password) VALUES (?, ?)",
-                (username, generate_password_hash(password)),
+                "INSERT INTO rt_users (email, password) VALUES (?, ?)",
+                (email, generate_password_hash(password)),
             )
             db.commit()
             return GenericResponse().dump(
-                {"message": f"User {username} successfully registered."}
+                {"message": f"User {email} successfully registered."}
             )
         else:
             # If user or password is missing
             abort(401, error)
     except db.IntegrityError:
-        abort(400, f"User {username} is already registered.")
+        abort(400, f"User {email} is already registered.")
     except Exception as e:
         # Unknown error
         abort(500, str(e.__cause__))
@@ -57,21 +57,21 @@ def register(data):
     description="Login a user with a username and password.",
 )
 def login(data):
-    username = data["username"]
+    email = data["email"]
     password = data["password"]
 
     db = get_db()
     error = None
 
     try:
-        if not username:
-            error = "Username is required."
+        if not email:
+            error = "Email is required."
         elif not password:
             error = "Password is required."
 
         if error is None:
             user_requested = db.execute(
-                "SELECT id, name, email, username FROM rt_users WHERE username = ?", (username,)
+                "SELECT id, name, email FROM rt_users WHERE username = ?", (email,)
             ).fetchone()
 
             if user_requested is None or not check_password_hash(
@@ -100,7 +100,7 @@ def login(data):
 def logout():
     session.clear()
     return GenericResponse().dump(
-        {"message": f"User {auth.current_user['username']} successfully logged out."}
+        {"message": f"User {auth.current_user['email']} successfully logged out."}
     )
 
 

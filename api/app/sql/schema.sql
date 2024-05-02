@@ -8,7 +8,6 @@ CREATE TABLE rt_users
     id       INT PRIMARY KEY UNIQUE,
     name     TEXT      NOT NULL,
     email    TEXT      NOT NULL,
-    username TEXT      NOT NULL,
     password TEXT      NOT NULL,
     created  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated  TIMESTAMP          DEFAULT NULL

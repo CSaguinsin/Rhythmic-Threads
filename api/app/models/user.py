@@ -5,7 +5,7 @@ from apiflask import Schema, fields
 
 class User(Schema):
     id = fields.Integer(dump_only=True)
-    username = fields.String(required=True)
+    email = fields.Email(required=True)
     password = fields.String(required=True)
     name = fields.String(required=True)
     created = fields.DateTime(dump_only=True, dump_default=datetime.now()).format
