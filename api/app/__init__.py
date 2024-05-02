@@ -1,6 +1,8 @@
 import os
 
-from apiflask import APIFlask
+from apiflask import APIFlask, HTTPBasicAuth
+
+auth = HTTPBasicAuth()
 
 
 def create_app():
@@ -32,9 +34,14 @@ def create_app():
         },
     }
 
-    from . import db
+    from app.db import close_db
+    from app.commands import setup_db_cmd, seed_db_cmd, create_user_cmd
 
-    db.setup_app(app)
+    with app.app_context():
+        app.teardown_appcontext(close_db)
+        app.cli.add_command(setup_db_cmd)
+        app.cli.add_command(seed_db_cmd)
+        app.cli.add_command(create_user_cmd)
 
     # Blueprints / Routes
     from app.routes import auth, products, cart

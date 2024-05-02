@@ -2,8 +2,6 @@ import sqlite3
 
 from flask import current_app, g
 
-from app.commands import setup_db_cmd
-
 
 def setup_db():
     """
@@ -18,17 +16,6 @@ def setup_db():
         db.executescript(f.read().decode("utf8"))
 
     db.commit()
-
-
-def setup_app(app):
-    """
-    Register database functions with the application instance.
-    :param app:
-    :return:
-    """
-
-    app.teardown_appcontext(close_db)
-    app.cli.add_command(setup_db_cmd)
 
 
 def get_db():
