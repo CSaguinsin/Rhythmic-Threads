@@ -22,11 +22,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-
-# Python Environments
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
