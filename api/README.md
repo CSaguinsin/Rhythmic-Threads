@@ -53,6 +53,16 @@ To seed the database with sample random data:
 flask -A app seed-db
 ```
 
+#### Creating default user
+
+This will create a readily-available user for testing:
+
+```sh
+flask -A app create-user
+```
+
+This will prompt for `username` _(email)_, `password`, and `name`.
+
 ### Running the API
 
 Create `.env` from `.env.sample` file in the `./api` directory:
@@ -64,14 +74,14 @@ cp .env.sample .env
 Generate secret key for authentication:
 
 ```sh
-python -c 'import secrets; print(secrets.token_hex())'
+python -c 'import secrets; print(secrets.token_hex())'  # TWICE, one for SECRET_KEY and one for JWT_SECRET_KEY
 ```
 
 and add the following:
 
 ```sh
-DEBUG=True
 SECRET_KEY=<secret_key>
+JWT_SECRET_KEY<secret_key2>
 ```
 
 Run flask inside `api/`:
