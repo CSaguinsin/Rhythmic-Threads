@@ -1,66 +1,18 @@
-from apiflask import APIBlueprint, abort
-from flask import session
-from marshmallow.fields import String
-from werkzeug.security import check_password_hash, generate_password_hash
+from datetime import datetime
 
+from apiflask import APIBlueprint, abort
+from flask import jsonify
+from flask_jwt_extended import create_access_token, decode_token, get_current_user, jwt_required
+from marshmallow.fields import String
+from werkzeug.security import generate_password_hash, check_password_hash
+
+from app import jwt
 from app.db import get_db, close_db
 from app.models.generic import GenericResponse
-from app.models.user import UserRequest, UserResponse, UserLoginRequest
+from app.models.user import UserRequest, UserLoginRequest, UserResponse
+from app.routes import auth_token
 
 bp = APIBlueprint("auth", __name__, url_prefix="/auth")
-
-
-# TODO: JWT Login
-# These are placeholder login functions.
-
-
-# @auth.verify_password
-def verify_password(username, password):
-    """
-    Verify the user's password.
-    This is used by the HTTPBasicAuth.verify_password decorator.
-
-    This 2-params function is required for the HTTPBasicAuth.verify_password decorator.
-
-    :param username:
-    :param password:
-    :return:
-    """
-    db = get_db()
-    error = None
-
-    try:
-        if not username:
-            error = "Email is required."
-        elif not password:
-            error = "Password is required."
-
-        if error is None:
-            user_requested = db.execute(
-                "SELECT id, name, username, password FROM rt_users WHERE username = ?",
-                (username,),
-            ).fetchone()
-
-            if user_requested is None or not check_password_hash(
-                user_requested["password"], password
-            ):
-                abort(401, "Incorrect username or password.")
-            else:
-                return UserResponse().dump(user_requested)
-        else:
-            # If user or password is missing
-            abort(401, error)
-
-    except Exception as e:
-        # Unknown error
-        abort(
-            500,
-            message="An error occurred while logging in the user.",
-            detail=str(e),
-        )
-
-    finally:
-        close_db()
 
 
 @bp.post("/register")
@@ -106,25 +58,113 @@ def register(json_data):
 
 @bp.post("/login")
 @bp.input(UserLoginRequest, location="json")
-@bp.output({"Authorization": String()}, 200)
+@bp.output({"token": String()}, 200)
 @bp.doc(summary="Login a user")
 def login(json_data):
     username = json_data["username"]
     password = json_data["password"]
 
+    db = get_db()
+
     try:
-        user = verify_password(username, password)
+        # Get user from database
+        user = db.execute(
+            "SELECT id, username, password, created, updated FROM rt_users WHERE username = ?", (username,)
+        ).fetchone()
+
+        # check password hash
+        if user is not None:
+            if check_password_hash(user["password"], password):
+                token = create_access_token(identity=user)
+
+
+                return jsonify({"token": token})
+            else:
+                abort(401, message="Invalid password.")
+
+    except Exception as e:
+        abort(500, message="An error occurred while logging in the user.", detail=str(e))
+    finally:
+        close_db()
+
+
+@bp.get("/profile")
+@bp.output(UserResponse, 200)
+@bp.auth_required(auth_token)
+@jwt_required()
+@bp.doc(summary="Get currently logged-in user profile")
+def profile():
+    user = get_current_user()
+
+    if user is not None:
+        return UserResponse().dump(user)
+    else:
+        abort(401, message="User not logged in.")
+
+
+# Register a callback function that loads a user from your database whenever
+# a protected route is accessed. This should return any python object on a
+# successful lookup,
+@jwt.user_lookup_loader
+def user_lookup_callback(_jwt_header, jwt_data):
+    identity = jwt_data["sub"]
+    db = get_db()
+
+    try:
+        user = db.execute(
+            "SELECT id, username, name, created FROM rt_users WHERE username = ?", (identity,)
+        ).fetchone()
+
         return UserResponse().dump(user)
     except Exception as e:
-        abort(500, message="An error occurred while logging in the user.", detail=e)
+        abort(500, message="An error occurred while looking up the user.", detail=str(e))
+    finally:
+        close_db()
 
 
-@bp.get("/logout")
-@bp.output(GenericResponse, 200)
-@bp.doc(
-    summary="Logout current user",
-    description="This requires manual clearing of session cookies from client browser.",
-)
-def logout():
-    session.clear()
-    return GenericResponse().dump({"message": "User logged out."})
+# Register a callback function that takes whatever object is passed in as the
+# identity when creating JWTs and converts it to a JSON serializable format.
+@jwt.user_identity_loader
+def user_identity_lookup(user):
+    return user["username"]
+
+
+@auth_token.verify_token
+def verify_token(token):
+    """
+    Verify token and get user
+    :param token:
+    :return:
+    """
+    db = get_db()
+
+    try:
+        # check if the jwt token is still fresh
+        decoded_token = decode_token(token, allow_expired=True)
+        user_id = decoded_token["sub"]
+        exp = decoded_token["exp"]
+
+        # check if the token has expired
+        expired = datetime.fromtimestamp(exp) < datetime.now()
+
+        if not expired:
+            user = db.execute(
+                "SELECT id, username, created, updated FROM rt_users WHERE username = ?", (user_id,)
+            ).fetchone()
+
+            if user is None:
+                abort(401, message="User not found.")
+            else:
+                return UserResponse().dump(user)
+        else:
+            abort(401, message="Token has expired. Please log in again.")
+
+    except Exception as e:
+        abort(
+            500,
+            message="An error occurred while verifying token.",
+            detail=str(e)
+        )
+
+    finally:
+        close_db()

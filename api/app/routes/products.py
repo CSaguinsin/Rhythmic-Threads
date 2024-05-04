@@ -1,10 +1,12 @@
 from apiflask import APIBlueprint, abort
 from apiflask.fields import Integer, String
 from flask import jsonify
+from flask_jwt_extended import jwt_required
 from marshmallow import ValidationError
 
 from app.db import get_db, close_db
 from app.models.product import Product
+from app.routes import auth_token
 
 bp = APIBlueprint("products", __name__, url_prefix="/products")
 
@@ -131,10 +133,13 @@ def create_product(json_data):
         close_db()
 
 
+# TODO: Role based access control
 @bp.patch("/<int:pid>")
 @bp.input(Product, location="json")
 @bp.output(Product)
-@bp.doc(summary="Update a product by ID")
+@bp.auth_required(auth_token)
+@jwt_required()
+@bp.doc(summary="Update a product by ID", hide=True)
 def update_product(pid, json_data):
     product = json_data
 
@@ -185,8 +190,12 @@ def update_product(pid, json_data):
         close_db()
 
 
+# TODO: Role based access control
 @bp.delete("/<int:pid>")
 @bp.output({"message": str}, 200)
+@bp.auth_required(auth_token)
+@jwt_required()
+@bp.doc(summary="Delete a product by ID", hide=True)
 def delete_product(pid):
     db = get_db()
 

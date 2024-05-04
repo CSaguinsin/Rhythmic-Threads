@@ -1,10 +1,12 @@
 from apiflask import APIBlueprint, abort
 from flask import jsonify
+from flask_jwt_extended import jwt_required
 from marshmallow import ValidationError
 from marshmallow.fields import Integer
 
 from app.db import get_db, close_db
 from app.models.cart import CartRequest, CartItemRequest
+from app.routes import auth_token
 
 bp = APIBlueprint("cart", __name__, url_prefix="/cart")
 
@@ -12,6 +14,8 @@ bp = APIBlueprint("cart", __name__, url_prefix="/cart")
 @bp.get("")
 @bp.input({"user_id": Integer()}, location="query")
 @bp.output(CartRequest(many=True))
+@bp.auth_required(auth_token)
+@jwt_required()
 @bp.doc(summary="Get the user's shopping cart items")
 def get_cart(query_data):
     db = get_db()
@@ -43,6 +47,8 @@ def get_cart(query_data):
 @bp.post("")
 @bp.input({"user_id": Integer()}, location="query")
 @bp.input(CartItemRequest, location="json")
+@bp.auth_required(auth_token)
+@jwt_required()
 @bp.doc(summary="Add or update an item to the user's shopping cart",
         description="Add product to the user's shopping cart, update "
                     "the quantity if the product is already added.\n\n"
@@ -106,6 +112,8 @@ def add_to_cart(query_data, json_data):
 
 @bp.delete("")
 @bp.input({"user_id": Integer(), "product_id": Integer()}, location="query")
+@bp.auth_required(auth_token)
+@jwt_required()
 @bp.doc(summary="Remove an item from the user's shopping cart",
         description="Remove a product from the user's shopping cart by providing the product id.")
 def remove_from_cart(query_data):

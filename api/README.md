@@ -1,7 +1,7 @@
 # Rhythmic Threads API
 
 > [!CAUTION]\
-> Login functionality is not yet implemented. All actions/endpoints can be accessed without authentication.
+> RBAC is not yet implemented, any logged-in user can Update/Delete endpoints.
 
 ## Development
 
