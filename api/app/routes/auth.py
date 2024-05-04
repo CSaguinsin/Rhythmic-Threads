@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from apiflask import APIBlueprint, abort
 from flask import jsonify
@@ -75,8 +75,10 @@ def login(json_data):
         # check password hash
         if user is not None:
             if check_password_hash(user["password"], password):
-                token = create_access_token(identity=user)
+                # Create a new access token that expires in 24 hours
+                token = create_access_token(identity=user, expires_delta=timedelta(days=1))
 
+                verify_token(token)
 
                 return jsonify({"token": token})
             else:
