@@ -35,7 +35,7 @@ CREATE TABLE rt_carts
     cart_items INTEGER             NOT NULL,
     created    TIMESTAMP           NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated    TIMESTAMP           NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES rt_users (uid),
+    FOREIGN KEY (user_id) REFERENCES rt_users (id),
     FOREIGN KEY (cart_items) REFERENCES rt_cart_item (id)
 );
 

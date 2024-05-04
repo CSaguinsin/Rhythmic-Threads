@@ -89,6 +89,8 @@ def get_product_by_id(pid):
 @bp.post("")
 @bp.input(Product, location="json")
 @bp.output(Product, 201)
+@bp.auth_required(auth_token)
+@jwt_required()
 @bp.doc(summary="Create a new product")
 def create_product(json_data):
     error = __validate_product(json_data)

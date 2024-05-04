@@ -4,7 +4,7 @@ from apiflask import HTTPTokenAuth, abort
 from flask_jwt_extended import decode_token
 
 from app import jwt
-from app.db import get_db, close_db
+from app.db import get_db
 from app.models.user import UserResponse
 
 auth_token = HTTPTokenAuth(scheme='Bearer')
@@ -23,9 +23,9 @@ def user_identity_lookup(user):
 @jwt.user_lookup_loader
 def user_lookup_callback(_jwt_header, jwt_data):
     identity = jwt_data["sub"]
-    db = get_db()
 
     try:
+        db = get_db()
         user = db.execute(
             "SELECT id, username, name, created FROM rt_users WHERE username = ?", (identity,)
         ).fetchone()
@@ -33,8 +33,6 @@ def user_lookup_callback(_jwt_header, jwt_data):
         return UserResponse().dump(user)
     except Exception as e:
         abort(500, message="An error occurred while looking up the user.", detail=str(e))
-    finally:
-        close_db()
 
 
 @auth_token.verify_token
@@ -44,7 +42,6 @@ def verify_token(token):
     :param token:
     :return:
     """
-    db = get_db()
 
     try:
         # check if the jwt token is still fresh
@@ -56,6 +53,7 @@ def verify_token(token):
         expired = datetime.fromtimestamp(exp) < datetime.now()
 
         if not expired:
+            db = get_db()
             user = db.execute(
                 "SELECT id, username, created, updated FROM rt_users WHERE username = ?", (user_id,)
             ).fetchone()
@@ -73,6 +71,3 @@ def verify_token(token):
             message="An error occurred while verifying token.",
             detail=str(e)
         )
-
-    finally:
-        close_db()

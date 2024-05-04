@@ -1,37 +1,57 @@
 from apiflask import APIBlueprint, abort
 from flask import jsonify
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, current_user
 from marshmallow import ValidationError
 from marshmallow.fields import Integer
 
 from app.db import get_db, close_db
-from app.models.cart import CartRequest, CartItemRequest
+from app.models.cart import CartRequest, CartItemRequest, CartSchema
 from app.routes import auth_token
 
 bp = APIBlueprint("cart", __name__, url_prefix="/cart")
 
 
 @bp.get("")
-@bp.input({"user_id": Integer()}, location="query")
-@bp.output(CartRequest(many=True))
+@bp.output(CartSchema(many=True))
 @bp.auth_required(auth_token)
 @jwt_required()
 @bp.doc(summary="Get the user's shopping cart items")
-def get_cart(query_data):
+def get_cart():
     db = get_db()
 
     try:
         # get current user's id
-        user_id = query_data["user_id"]
+        user_id = current_user["id"]
 
-        # get the user's shopping cart items and join with the cart items table
-        cart = db.execute(
-            "SELECT cart.id, cart.user_id, cart_item.* "
-            "FROM rt_carts cart JOIN rt_cart_items cart_item ON cart.cart_items = cart_item.id "
-            "WHERE cart.user_id = ?",
-            (user_id,),
+        # get the user's shopping cart items and from cart_items and products table
+        user_cart = db.execute(
+            """
+            SELECT
+                rt_carts.id,
+                rt_cart_items.id,
+                rt_products.id,
+                rt_products.name,
+                rt_products.description,
+                rt_products.collection,
+                rt_products.category,
+                rt_products.sx,
+                rt_products.size,
+                rt_products.price,
+                rt_products.ratings,
+                rt_cart_items.qty
+            FROM
+                rt_carts
+            INNER JOIN
+                rt_cart_items ON rt_carts.id = rt_cart_items.cart_id
+            INNER JOIN
+                rt_products ON rt_cart_items.product_id = rt_products.id
+            INNER JOIN
+                rt_users ON rt_carts.user_id = rt_users.id
+            WHERE
+                rt_users.id = ?
+            """, (user_id,)
         ).fetchall()
-        return CartRequest().dump(cart)
+        return CartRequest().dump(user_cart)
 
     except Exception as e:
         abort(
@@ -40,12 +60,8 @@ def get_cart(query_data):
             detail=str(e),
         )
 
-    finally:
-        db.close()
-
 
 @bp.post("")
-@bp.input({"user_id": Integer()}, location="query")
 @bp.input(CartItemRequest, location="json")
 @bp.auth_required(auth_token)
 @jwt_required()
@@ -53,9 +69,9 @@ def get_cart(query_data):
         description="Add product to the user's shopping cart, update "
                     "the quantity if the product is already added.\n\n"
                     "This requires a logged-in user to get the current user id.")
-def add_to_cart(query_data, json_data):
+def add_to_cart(json_data):
     db = get_db()
-    user_id = query_data["user_id"]
+    user_id = current_user.id
 
     try:
         error = __validate_cart(json_data)
@@ -111,7 +127,7 @@ def add_to_cart(query_data, json_data):
 
 
 @bp.delete("")
-@bp.input({"user_id": Integer(), "product_id": Integer()}, location="query")
+@bp.input({"product_id": Integer()}, location="query")
 @bp.auth_required(auth_token)
 @jwt_required()
 @bp.doc(summary="Remove an item from the user's shopping cart",
@@ -121,7 +137,7 @@ def remove_from_cart(query_data):
 
     try:
         product_id = query_data["pid"]
-        user_id = query_data["user_id"]
+        user_id = current_user.id
 
         # get the cart for the current user
         cart_id = db.execute(
