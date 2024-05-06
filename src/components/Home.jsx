@@ -7,9 +7,12 @@ import category1 from '/LandingpagePics/category1.png'
 import category2 from '/LandingpagePics/category2.png'
 import category3 from '/LandingpagePics/category3.png'
 import callToAction from '../../public/LandingpagePics/callToAction.png'
+
+import Navbar from './Navbar'
 const Home = () => {
   return (
 <>
+<Navbar />
 {/* Hero section */}
     <section>
         <div className="text-center md:text-center sm:text-center pt-10">

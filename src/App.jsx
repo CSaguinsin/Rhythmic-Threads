@@ -4,19 +4,23 @@ import { BrowserRouter as  Router, Route, Routes} from 'react-router-dom';
 
 // components
 import Home from './components/Home'
-import Navbar from './components/Navbar'
 import Footer from './components/Footer';
+
+// auth components
+import AuthLandingPage from './authcomponents/AuthLandingPage';
 function App() {
 
   return (
     <>
-    <Navbar />
     <Routes>
       <Route path='/' element={<Home />} />
+
+
+      {/* Routes of authenticated users */}
+      <Route path='/landingpage' element={<AuthLandingPage />} />
     </Routes>
     <Footer />
-    </>
-  )
+    </>)
 }
 
 export default App
