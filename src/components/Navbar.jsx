@@ -55,10 +55,10 @@ const Navbar = () => {
       </div>
 
       <div className="navbar-end space-x-3">
-        <a className="btn">Login</a>
+        <a className="btn rounded-full px-8">Login</a>
 
         <button
-          className="btn text-white"
+          className="btn rounded-full px-8 text-white"
           style={{ backgroundColor: "#F68347" }}
         >
           Create an account →
