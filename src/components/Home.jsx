@@ -164,7 +164,7 @@ const Home = () => {
           style={{ backgroundImage: `url(${callToAction})` }}
         >
           <div className="hero-content relative z-10 text-center">
-            <div className="">
+            <div className="drop-shadow-lg">
               <h1 className="text-[80px] font-extrabold text-white">
                 What are you{" "}
                 <span style={{ color: "#F68347" }}>waiting for?</span>
@@ -176,7 +176,7 @@ const Home = () => {
               </p>
               <div className="flex justify-center space-x-3 pt-5">
                 <button
-                  className="btn h-[64px] w-[228px] text-white"
+                  className="btn h-[64px] w-[228px] border-0 text-white shadow-md"
                   style={{ backgroundColor: "#F68347" }}
                 >
                   SHOP NOW
