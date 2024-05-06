@@ -2,7 +2,7 @@ import Logo from "/webSystemLogo.png";
 
 const Navbar = () => {
   return (
-    <div className="navbar  px-[70px] bg-white">
+    <div className="navbar  bg-white px-[70px]">
       <div className="navbar-start">
         <div className="dropdown">
           <div
@@ -12,7 +12,7 @@ const Navbar = () => {
           ></div>
           <ul
             tabIndex={0}
-            className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+            className="menu dropdown-content menu-sm z-[1] mt-3 w-52 rounded-box bg-base-100 p-2 shadow"
           >
             <li>
               <a>Home </a>

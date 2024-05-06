@@ -1,9 +1,8 @@
 import Logo from "/public/webSystemLogo.png";
-import Cart from "/public/icons/cart.png";
 
 const AuthNavbar = () => {
   return (
-    <div className="navbar  px-[70px] bg-white">
+    <div className="navbar bg-white px-[70px]">
       <div className="">
         <div className="dropdown">
           <div
@@ -14,7 +13,7 @@ const AuthNavbar = () => {
         </div>
       </div>
 
-      <div className="navbar-center hidden lg:flex space-x-[24px]">
+      <div className="navbar-center hidden space-x-[24px] lg:flex">
         <img src={Logo} className="h-[4rem] w-[4rem]" />
         <label className="input input-bordered flex w-[500px] items-center gap-2">
           <input type="text" className="grow" placeholder="Search" />
@@ -22,7 +21,7 @@ const AuthNavbar = () => {
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 16 16"
             fill="currentColor"
-            className="w-4 h-4 opacity-70"
+            className="h-4 w-4 opacity-70"
           >
             <path
               fillRule="evenodd"
