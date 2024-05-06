@@ -85,7 +85,7 @@ const Home = () => {
 
         <div className="mx-20 flex items-center justify-center space-x-8">
           {/* MENS */}
-          <div className="grid h-full grid-cols-1 gap-5 place-self-stretch sm:grid-cols-2 md:grid-cols-4">
+          <div className="grid h-full min-w-full grid-cols-1 gap-5 place-self-stretch sm:grid-cols-2 md:grid-cols-4">
             <div className="col-span-2 flex h-auto w-full flex-col bg-gray-50 sm:col-span-1 md:col-span-2 md:h-full">
               <a
                 href=""
@@ -107,7 +107,7 @@ const Home = () => {
             </div>
 
             {/* WOMEN AND KIDS ROW */}
-            <div className="col-span-2 grid w-full grid-cols-1 grid-rows-2 gap-y-4 bg-stone-50 sm:col-span-1 md:col-span-2">
+            <div className="col-span-2 grid w-full grid-cols-1 grid-rows-2 gap-y-4 place-self-stretch bg-stone-50 sm:col-span-1 md:col-span-2">
               <a
                 href=""
                 className="group relative flex flex-col overflow-hidden rounded-xl px-4 py-28"
