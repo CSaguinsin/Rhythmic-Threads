@@ -1,11 +1,11 @@
-import AuthNavbar from './AuthNavbar'
+import AuthNavbar from "./AuthNavbar";
 const AuthLandingPage = () => {
   return (
     <>
-    <AuthNavbar />
-    <h1>Check</h1>
+      <AuthNavbar />
+      <h1>Check</h1>
     </>
-  )
-}
+  );
+};
 
-export default AuthLandingPage
+export default AuthLandingPage;
