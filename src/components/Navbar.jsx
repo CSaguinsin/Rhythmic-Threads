@@ -4,6 +4,7 @@ const Navbar = () => {
   return (
     <div className="navbar bg-white md:px-36">
       <div className="navbar-start">
+        {/* Mobile menu */}
         <div className="dropdown">
           <div
             tabIndex={0}
@@ -34,7 +35,13 @@ const Navbar = () => {
           </ul>
         </div>
 
-        <img src={Logo} className="h-[6rem] w-[6rem]" />
+        <a href="/">
+          <img
+            src={Logo}
+            className="h-[6rem] w-[6rem]"
+            alt="Welcome to Rhythmic Threads"
+          />
+        </a>
       </div>
 
       <div className="navbar-center hidden lg:flex">
@@ -55,14 +62,17 @@ const Navbar = () => {
       </div>
 
       <div className="navbar-end space-x-3">
-        <a className="btn rounded-full px-8">Login</a>
+        <a href="/login" className="btn rounded-full px-8">
+          Login
+        </a>
 
-        <button
+        <a
+          href="/register"
           className="btn rounded-full px-8 text-white"
           style={{ backgroundColor: "#F68347" }}
         >
           Create an account →
-        </button>
+        </a>
       </div>
     </div>
   );

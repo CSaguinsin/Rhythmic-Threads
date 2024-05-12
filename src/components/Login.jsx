@@ -3,13 +3,13 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 import localStorage from "../utils/localStorage";
+import Navbar from "./Navbar";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const backgroundColor = "#333"; // Dark gray background color
 
   const navigate = useNavigate();
 
@@ -35,85 +35,69 @@ const Login = () => {
   };
 
   return (
-    <form
-      onSubmit={(e) => handleLogin(e)}
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        minHeight: "60vh",
-        backgroundColor,
-      }}
-    >
-      <div
-        style={{
-          textAlign: "center",
-          maxWidth: "400px",
-          padding: "20px",
-          backgroundColor: "#fff",
-          borderRadius: "8px",
-          boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-        }}
-      >
-        <h2
-          style={{
-            color: "#f68347",
-            marginBottom: "20px",
-            fontWeight: "bold",
-            fontSize: "24px",
-          }}
+    <>
+      <Navbar />
+
+      <div className="hero relative min-h-full bg-[url('/LandingpagePics/callToAction.png')] bg-cover bg-center">
+        <form
+          onSubmit={(e) => handleLogin(e)}
+          className="flex items-center justify-center py-20"
         >
-          Login
-        </h2>
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          style={{
-            width: "100%",
-            padding: "10px",
-            marginTop: "5px",
-            border: "1px solid #ccc",
-            borderRadius: "5px",
-            backgroundColor: "#444",
-            color: "#fff",
-          }}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          style={{
-            width: "100%",
-            padding: "10px",
-            marginTop: "5px",
-            border: "1px solid #ccc",
-            borderRadius: "5px",
-            backgroundColor: "#444",
-            color: "#fff",
-          }}
-        />
-        <button
-          type="submit"
-          disabled={loading}
-          className={loading ? "animate-pulse" : ""}
-          style={{
-            width: "100%",
-            padding: "10px",
-            marginTop: "10px",
-            backgroundColor: loading ? "#444" : "#f68347",
-            color: "#fff",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
-        >
-          {loading ? "Logging in..." : "Login"}
-        </button>
+          <div className="max-w-[400px] rounded-xl bg-gray-50 p-12 text-center shadow-lg dark:bg-gray-800">
+            <h2
+              style={{
+                color: "#f68347",
+                marginBottom: "20px",
+                fontWeight: "bold",
+                fontSize: "24px",
+              }}
+            >
+              Sign in the get started
+            </h2>
+            <input
+              type="text"
+              placeholder="Username"
+              value={username}
+              autoComplete="username"
+              onChange={(e) => setUsername(e.target.value)}
+              className="my-1 w-full rounded-lg border-2 border-gray-300 p-3 dark:bg-gray-700 dark:text-white"
+              required
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              autoComplete="current-password"
+              onChange={(e) => setPassword(e.target.value)}
+              className="my-1 w-full rounded-lg border-2 border-gray-300 p-3 dark:bg-gray-700 dark:text-white"
+              required
+            />
+
+            <div className="flex w-full flex-row items-center justify-between align-middle">
+              {/* remember me */}
+              <span>
+                <input
+                  type="checkbox"
+                  id="rememberMe"
+                  name="rememberMe"
+                  className="mr-2"
+                />
+                <label htmlFor="rememberMe">Remember me</label>
+              </span>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="btn my-3 rounded-full border-0 px-12 text-white shadow-sm"
+                style={{ backgroundColor: "#f68347" }}
+              >
+                {loading ? "Logging in..." : "Login"}
+              </button>
+            </div>
+          </div>
+        </form>
       </div>
-    </form>
+    </>
   );
 };
 
