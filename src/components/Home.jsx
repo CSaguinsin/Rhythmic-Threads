@@ -1,6 +1,5 @@
 import Navbar from "./Navbar";
 
-import heroPic from "/LandingpagePics/heroPic.png";
 import bestSeller1 from "/LandingpagePics/bestSeller1.png";
 import bestSeller2 from "/LandingpagePics/bestSeller2.png";
 import bestSeller3 from "/LandingpagePics/bestSeller3.png";
@@ -8,7 +7,7 @@ import seeAll from "/LandingpagePics/seeAll.png";
 import category1 from "/LandingpagePics/category1.png";
 import category2 from "/LandingpagePics/category2.png";
 import category3 from "/LandingpagePics/category3.png";
-import callToAction from "../../public/LandingpagePics/callToAction.png";
+import callToAction from "/LandingpagePics/callToAction.png";
 
 const Home = () => {
   return (
@@ -16,70 +15,81 @@ const Home = () => {
       <Navbar />
 
       {/* Hero section */}
-      <section>
-        <div className="pt-10 text-center sm:text-center md:text-center">
-          <h1 className="text-[48px] font-bold">
-            Step into <span style={{ color: "#F68347" }}>Style</span> & Discover{" "}
-            <span style={{ color: "#F68347" }}>Fashion</span> <br /> Freedom
-            Online with <br />
-            <span style={{ color: "#F68347" }}>Every Click</span>
+      <section className="rounded-2xl py-14 md:mx-36 md:py-20">
+        <div className="pb-5 pt-8 text-center sm:text-center md:text-center">
+          <h1 className="mx-auto w-2/3 text-7xl font-extrabold leading-tight drop-shadow-lg">
+            Step into <span style={{ color: "#F68347" }}>Style</span>,
+            <br /> Discover <span style={{ color: "#F68347" }}>Fashion</span>.
           </h1>
-        </div>
 
-        <div className="pt-[48px]">
-          <img src={heroPic} className="w-[1366rem]" />
+          <div className="mx-auto mt-10 flex max-w-max flex-row content-center items-center space-x-2 align-middle">
+            <button
+              className="btn h-[64px] w-[228px] rounded-full border-0 text-white shadow-sm"
+              style={{ backgroundColor: "#F68347" }}
+            >
+              Browse Catalog →
+            </button>
+
+            <button className="btn btn-ghost h-[64px] w-[228px] border-0 hover:bg-transparent">
+              View your orders →
+            </button>
+          </div>
         </div>
       </section>
       {/* End of hero section */}
 
       <section className="mx-[78px] pt-[48px]">
-        <div className="flex flex-row space-x-[886px] px-[70px]">
-          <h1 className="text-[32px] font-bold">
+        <div className="flex flex-row place-content-between px-[70px]">
+          <h1 className="text-3xl font-extrabold">
             BEST <span style={{ color: "#F68347" }}>SELLERS</span>
           </h1>
-          <div className="flex flex-row space-x-2">
+          <div className="flex flex-row items-center justify-center space-x-2">
             <p className="pt-[9px] font-semibold">SEE ALL</p>
-            <img src={seeAll} className="mt-2 h-[24px] w-[24px]" />
+            <img src={seeAll} className="mt-2 h-4 w-4" />
           </div>
         </div>
+
         <hr className="mx-[70px] my-4 h-px border-0 bg-gray-200 dark:bg-gray-700" />
-        <div className="flex  items-center justify-center space-x-[24px] px-[70px] pt-[27px]">
+
+        <div className="grid grid-cols-1 place-content-center place-items-stretch gap-4 place-self-center px-[70px] pt-[27px] md:place-items-center lg:grid-cols-2 xl:grid-cols-3">
           <div className="flex flex-col">
             <img src={bestSeller1} className="h-[544px] w-[392px]" />
             <div className="flex flex-row space-x-[220px] pt-[27px]">
-              <p className="font-bold">UTILITY JACKET</p>
+              <p className="text-nowrap font-bold">UTILITY JACKET</p>
               <p>₱780</p>
             </div>
           </div>
           <div className="flex flex-col">
             <img src={bestSeller2} className="h-[544px] w-[392px]" />
             <div className="flex flex-row space-x-[163px] pt-[27px]">
-              <p className="font-bold">SKATER DENIM JACKET</p>
+              <p className="text-nowrap font-bold">SKATER DENIM JACKET</p>
               <p>₱480</p>
             </div>
           </div>
           <div className="flex flex-col">
             <img src={bestSeller3} className="h-[544px] w-[392px]" />
             <div className="flex flex-row space-x-[116px] pt-[27px]">
-              <p className="font-bold">OVERSIZED GREY WHITE TEE</p>
+              <p className="text-nowrap font-bold">OVERSIZED GREY WHITE TEE</p>
               <p>₱900</p>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="mx-[78px] pt-[46px] ">
+      <section className="mx-[78px] my-20">
         <div className="px-[70px]">
-          <h1 className="text-right text-[32px] font-bold">
+          <h1 className="mb-6 text-right text-3xl font-extrabold">
             SHOP BY <span style={{ color: "#F68347" }}>CATEGORY</span>
           </h1>
         </div>
-        <div className="mx-[78px] flex items-center justify-center space-x-8">
-          <div className="grid h-full grid-cols-1 gap-[10rem] sm:grid-cols-2 md:grid-cols-5">
-            <div className="col-span-2 flex h-auto w-[536px] flex-col bg-gray-50 sm:col-span-1 md:col-span-2 md:h-full">
+
+        <div className="mx-20 flex items-center justify-center space-x-8">
+          {/* MENS */}
+          <div className="grid h-full min-w-full grid-cols-1 gap-5 place-self-stretch sm:grid-cols-2 md:grid-cols-4">
+            <div className="col-span-2 flex h-auto w-full flex-col bg-gray-50 sm:col-span-1 md:col-span-2 md:h-full">
               <a
                 href=""
-                className="group relative flex flex-grow flex-col overflow-hidden rounded-lg px-4 pb-4 pt-40"
+                className="group relative flex flex-grow flex-col overflow-hidden rounded-xl px-4 pb-4 pt-40"
               >
                 <img
                   src={category1}
@@ -91,14 +101,16 @@ const Home = () => {
                   MEN
                 </h3>
                 <h4 className="absolute left-0 top-10 p-4 text-[16px] font-medium text-white ">
-                  SHOP NOW
+                  Grab the latest men&apos;s fashion trends.
                 </h4>
               </a>
             </div>
-            <div className="col-span-2 w-[536px] bg-stone-50 sm:col-span-1 md:col-span-2">
+
+            {/* WOMEN AND KIDS ROW */}
+            <div className="col-span-2 grid w-full grid-cols-1 grid-rows-2 gap-y-4 place-self-stretch bg-stone-50 sm:col-span-1 md:col-span-2">
               <a
                 href=""
-                className="group relative mb-4 flex flex-col overflow-hidden rounded-lg px-4 pb-4 pt-40"
+                className="group relative flex flex-col overflow-hidden rounded-xl px-4 py-28"
               >
                 <img
                   src={category2}
@@ -110,12 +122,12 @@ const Home = () => {
                   WOMEN
                 </h3>
                 <h4 className="absolute left-0 top-10 p-4 text-[16px] font-medium text-white ">
-                  SHOP NOW
+                  Browse through our women&apos;s elegant collection.
                 </h4>
               </a>
               <a
                 href=""
-                className="group relative mb-4 flex flex-col overflow-hidden rounded-lg px-4 pb-4 pt-40"
+                className="group relative flex flex-col overflow-hidden rounded-xl px-4 py-28"
               >
                 <img
                   src={category3}
@@ -127,7 +139,7 @@ const Home = () => {
                   KIDS
                 </h3>
                 <h4 className="absolute left-0 top-10 p-4 text-[16px] font-medium text-white ">
-                  SHOP NOW
+                  Find the perfect outfit for your little ones.
                 </h4>
               </a>
             </div>
@@ -152,9 +164,9 @@ const Home = () => {
           style={{ backgroundImage: `url(${callToAction})` }}
         >
           <div className="hero-content relative z-10 text-center">
-            <div className="">
-              <h1 className="text-[80px] font-bold text-white">
-                So? What are you{" "}
+            <div className="drop-shadow-lg">
+              <h1 className="text-[80px] font-extrabold text-white">
+                What are you{" "}
                 <span style={{ color: "#F68347" }}>waiting for?</span>
               </h1>
               <p className="py-6 text-white">
@@ -164,7 +176,7 @@ const Home = () => {
               </p>
               <div className="flex justify-center space-x-3 pt-5">
                 <button
-                  className="btn h-[64px] w-[228px] text-white"
+                  className="btn h-[64px] w-[228px] rounded-full border-0 text-white shadow-md"
                   style={{ backgroundColor: "#F68347" }}
                 >
                   SHOP NOW

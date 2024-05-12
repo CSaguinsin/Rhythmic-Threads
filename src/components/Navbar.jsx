@@ -2,7 +2,7 @@ import Logo from "/webSystemLogo.png";
 
 const Navbar = () => {
   return (
-    <div className="navbar  bg-white px-[70px]">
+    <div className="navbar bg-white md:px-36">
       <div className="navbar-start">
         <div className="dropdown">
           <div
@@ -34,7 +34,7 @@ const Navbar = () => {
           </ul>
         </div>
 
-        <img src={Logo} className="h-[4rem] w-[4rem]" />
+        <img src={Logo} className="h-[6rem] w-[6rem]" />
       </div>
 
       <div className="navbar-center hidden lg:flex">
@@ -54,13 +54,14 @@ const Navbar = () => {
         </ul>
       </div>
 
-      <div className="navbar-end space-x-5">
-        <a className="btn">LOGIN</a>
+      <div className="navbar-end space-x-3">
+        <a className="btn rounded-full px-8">Login</a>
+
         <button
-          className="btn text-white"
+          className="btn rounded-full px-8 text-white"
           style={{ backgroundColor: "#F68347" }}
         >
-          SIGN UP
+          Create an account →
         </button>
       </div>
     </div>
