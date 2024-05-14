@@ -1,5 +1,6 @@
 import Navbar from "./Navbar";
 
+import heroPic from "/LandingpagePics/heroPic.png";
 import bestSeller1 from "/LandingpagePics/bestSeller1.png";
 import bestSeller2 from "/LandingpagePics/bestSeller2.png";
 import bestSeller3 from "/LandingpagePics/bestSeller3.png";
@@ -37,6 +38,14 @@ const Home = () => {
         </div>
       </section>
       {/* End of hero section */}
+
+      {/* BG Divider */}
+      <div className="mb-8 bg-cover">
+        <img
+          src={heroPic}
+          className="aspect-video max-h-[360px] w-full object-cover"
+        />
+      </div>
 
       <section className="mx-[78px] pt-[48px]">
         <div className="flex flex-row place-content-between px-[70px]">
@@ -147,16 +156,47 @@ const Home = () => {
         </div>
       </section>
 
-      {/* <section className='pt-[48px] mx-[78px]'>
-       <div className='px-[70px] flex flex-row space-x-[172px]'>
-        <h1 className='font-bold text-[32px]'>GET YOURSELF <span style={{ color: '#F68347' }}>SOMETHING</span> TO WEAR IN THIS <span style={{ color: '#F68347' }}>FASHION THREADS</span></h1>
-        <p className='text-[16px]'>Find your perfect look with Fashion Threads! Whether it's a casual ensemble or statement piece, we've got you covered. </p>
-       </div>
+      <section className="pt-[48px]">
+        <div className="mx-[78px] flex flex-row items-center space-x-[172px] px-[70px]">
+          <h1 className="text-[32px] font-extrabold">
+            GET YOURSELF <span style={{ color: "#F68347" }}>SOMETHING</span> TO
+            WEAR IN THIS{" "}
+            <span style={{ color: "#F68347" }}>FASHION THREADS</span>
+          </h1>
+          <p className="font-medium">
+            Find your perfect look with Fashion Threads! Whether it&apos;s a
+            casual ensemble or statement piece, we&apos;ve got you covered.{" "}
+          </p>
+        </div>
 
-       <div className='flex flex-row pt-[40px]'>
-
-       </div>
-    </section> */}
+        {/* horizontal iamg carousel */}
+        <div className="scrollbar-hide ml-[-40px] mt-8 flex h-max flex-row space-x-12 overflow-hidden">
+          <img
+            src={bestSeller1}
+            height={100}
+            width={360}
+            className="aspect-square max-w-none rounded-xl object-cover"
+          />
+          <img
+            src={bestSeller2}
+            height={100}
+            width={360}
+            className="aspect-square max-w-none rounded-xl object-cover"
+          />
+          <img
+            src={bestSeller3}
+            height={100}
+            width={360}
+            className="aspect-square max-w-none rounded-xl object-cover"
+          />
+          <img
+            src={bestSeller1}
+            height={100}
+            width={360}
+            className="aspect-square max-w-none rounded-xl object-cover"
+          />
+        </div>
+      </section>
 
       <section className="pt-[48px]">
         <div
@@ -189,4 +229,5 @@ const Home = () => {
     </>
   );
 };
+
 export default Home;
