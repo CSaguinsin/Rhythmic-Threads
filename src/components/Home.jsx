@@ -24,16 +24,20 @@ const Home = () => {
           </h1>
 
           <div className="mx-auto mt-10 flex max-w-max flex-row content-center items-center space-x-2 align-middle">
-            <button
+            <a
+              href="/products"
               className="btn h-[64px] w-[228px] rounded-full border-0 text-white shadow-sm"
               style={{ backgroundColor: "#F68347" }}
             >
               Browse Catalog →
-            </button>
+            </a>
 
-            <button className="btn btn-ghost h-[64px] w-[228px] border-0 hover:bg-transparent">
+            <a
+              href="/login"
+              className="btn btn-ghost h-[64px] w-[228px] border-0 hover:bg-transparent"
+            >
               View your orders →
-            </button>
+            </a>
           </div>
         </div>
       </section>
@@ -156,7 +160,7 @@ const Home = () => {
         </div>
       </section>
 
-      <section className="pt-[48px]">
+      <section className="my-36">
         <div className="mx-[78px] flex flex-row items-center space-x-[172px] px-[70px]">
           <h1 className="text-[32px] font-extrabold">
             GET YOURSELF <span style={{ color: "#F68347" }}>SOMETHING</span> TO
