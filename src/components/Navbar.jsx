@@ -62,13 +62,13 @@ const Navbar = () => {
       </div>
 
       <div className="navbar-end space-x-3">
-        <a href="/login" className="btn rounded-full px-8">
+        <a href="/login" className="btn px-8">
           Login
         </a>
 
         <a
           href="/register"
-          className="btn rounded-full px-8 text-white"
+          className="btn px-8 text-white"
           style={{ backgroundColor: "#F68347" }}
         >
           Create an account →

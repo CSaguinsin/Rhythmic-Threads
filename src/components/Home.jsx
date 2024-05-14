@@ -26,7 +26,7 @@ const Home = () => {
           <div className="mx-auto mt-10 flex max-w-max flex-row content-center items-center space-x-2 align-middle">
             <a
               href="/products"
-              className="btn h-[64px] w-[228px] rounded-full border-0 text-white shadow-sm"
+              className="btn h-[64px] w-[228px] border-0 text-white shadow-sm"
               style={{ backgroundColor: "#F68347" }}
             >
               Browse Catalog →
@@ -179,25 +179,25 @@ const Home = () => {
             src={bestSeller1}
             height={100}
             width={360}
-            className="aspect-square max-w-none rounded-xl object-cover"
+            className="aspect-square max-w-none rounded-lg object-cover"
           />
           <img
             src={bestSeller2}
             height={100}
             width={360}
-            className="aspect-square max-w-none rounded-xl object-cover"
+            className="aspect-square max-w-none rounded-lg object-cover"
           />
           <img
             src={bestSeller3}
             height={100}
             width={360}
-            className="aspect-square max-w-none rounded-xl object-cover"
+            className="aspect-square max-w-none rounded-lg object-cover"
           />
           <img
             src={bestSeller1}
             height={100}
             width={360}
-            className="aspect-square max-w-none rounded-xl object-cover"
+            className="aspect-square max-w-none rounded-lg object-cover"
           />
         </div>
       </section>
@@ -220,7 +220,7 @@ const Home = () => {
               </p>
               <div className="flex justify-center space-x-3 pt-5">
                 <button
-                  className="btn h-[64px] w-[228px] rounded-full border-0 text-white shadow-md"
+                  className="btn h-[64px] w-[228px] border-0 text-white shadow-md"
                   style={{ backgroundColor: "#F68347" }}
                 >
                   SHOP NOW
