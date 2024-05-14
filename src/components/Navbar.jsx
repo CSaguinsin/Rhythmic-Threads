@@ -45,18 +45,18 @@ const Navbar = () => {
       </div>
 
       <div className="navbar-center hidden lg:flex">
-        <ul className="menu menu-horizontal px-1">
+        <ul className="menu menu-horizontal px-1 uppercase">
           <li className="font-inter font-semibold">
-            <a>HOME</a>
+            <a href="/">Home</a>
           </li>
           <li className="font-inter font-semibold">
-            <a>MEN</a>
+            <a href="/products?q=men">Men</a>
           </li>
           <li className="font-inter font-semibold">
-            <a>WOMEN</a>
+            <a href="/products?q=women">Women</a>
           </li>
           <li className="font-inter font-semibold">
-            <a>KIDS</a>
+            <a href="/products?q=kids">Kids</a>
           </li>
         </ul>
       </div>
