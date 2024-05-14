@@ -1,26 +1,25 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
 import AuthNavbar from "../authcomponents/AuthNavbar";
 import { useEffect } from "react";
 import { ProductCard } from "./ProductCard";
 
-export default function Products() {
+export default function Products({ user }) {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    fetch("/api/products")
-      .then((res) => res.json())
-      .then((data) => setData(data));
+    fetch("/api/products").then((res) => setData(res.data));
   }, []);
 
   return (
     <>
-      <AuthNavbar />
+      <AuthNavbar user={user} />
 
       <div className="flex h-full space-x-6 space-y-8 p-8 md:mx-[78px] md:flex">
         <div className="flex w-full">
           {/* Filter Sidebar */}
           <div className="relative w-1/4 p-4">
-            <form className="sticky left-0 top-24 z-0 space-y-6 overflow-hidden">
+            <form className="sticky left-0 top-24 z-0 space-y-6 overflow-hidden px-1">
               <div>
                 <h3 className="text-lg font-semibold">Product Categories</h3>
                 <div className="mt-2 space-y-2">
@@ -28,7 +27,7 @@ export default function Products() {
                     <input
                       id="men"
                       type="checkbox"
-                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+                      className="checkbox-warning checkbox h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
                     />
                     <label
                       htmlFor="men"
@@ -41,7 +40,7 @@ export default function Products() {
                     <input
                       id="women"
                       type="checkbox"
-                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+                      className="checkbox-warning checkbox h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
                     />
                     <label
                       htmlFor="women"
@@ -54,7 +53,7 @@ export default function Products() {
                     <input
                       id="kids"
                       type="checkbox"
-                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+                      className="checkbox-warning checkbox h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
                     />
                     <label
                       htmlFor="kids"
@@ -74,7 +73,7 @@ export default function Products() {
                       id="shorts"
                       type="checkbox"
                       value=""
-                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+                      className="checkbox-warning checkbox h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
                     />
                     <label
                       htmlFor="shorts"
@@ -88,7 +87,7 @@ export default function Products() {
                       id="jackets"
                       type="checkbox"
                       value=""
-                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+                      className="checkbox-warning checkbox h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
                     />
                     <label
                       htmlFor="jackets"
@@ -102,7 +101,7 @@ export default function Products() {
                       id="tshirts"
                       type="checkbox"
                       value=""
-                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+                      className="checkbox-warning checkbox h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
                     />
                     <label
                       htmlFor="tshirts"
@@ -122,7 +121,7 @@ export default function Products() {
                       id="s"
                       type="checkbox"
                       value=""
-                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+                      className="checkbox-warning checkbox h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
                     />
                     <label
                       htmlFor="s"
@@ -136,7 +135,7 @@ export default function Products() {
                       id="m"
                       type="checkbox"
                       value=""
-                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+                      className="checkbox-warning checkbox h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
                     />
                     <label
                       htmlFor="m"
@@ -150,7 +149,7 @@ export default function Products() {
                       id="l"
                       type="checkbox"
                       value=""
-                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+                      className="checkbox-warning checkbox h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
                     />
                     <label
                       htmlFor="l"
@@ -164,7 +163,7 @@ export default function Products() {
                       id="xl"
                       type="checkbox"
                       value=""
-                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+                      className="checkbox-warning checkbox h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
                     />
                     <label
                       htmlFor="xl"
@@ -178,7 +177,7 @@ export default function Products() {
                       id="xxl"
                       type="checkbox"
                       value=""
-                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+                      className="checkbox-warning checkbox h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
                     />
                     <label
                       htmlFor="xxl"
@@ -207,7 +206,7 @@ export default function Products() {
 
           {/* Grid content */}
           <div className="grid-rows-auto grid h-max w-full grid-cols-1 content-stretch items-stretch gap-8 p-4 md:grid-cols-2 lg:grid-cols-3">
-            {data.map((product) => (
+            {data?.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
