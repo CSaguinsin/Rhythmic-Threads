@@ -26,7 +26,7 @@ def get_products(query_data):
     """
 
     db = get_db()
-    query = "SELECT id, name, description, collection, category, sx, size, price, ratings, created FROM rt_products"
+    query = "SELECT id, image_url, name, description, collection, category, size, price, ratings, created FROM rt_products"
     params = []
 
     if query_data:
@@ -73,7 +73,7 @@ def get_products(query_data):
 def get_product_by_id(pid):
     try:
         db = get_db()
-        product = db.execute("SELECT id, name, description, collection, category, sx, size, price, ratings, created "
+        product = db.execute("SELECT id, image_url, name, description, collection, category, size, price, ratings, created "
                              "FROM rt_products WHERE id = ?", (pid,)).fetchone()
 
         if product is not None:
@@ -107,14 +107,14 @@ def create_product(json_data):
 
         if error is None:
             db.execute(
-                "INSERT INTO rt_products (name, description, collection, category, sx, size, price, ratings) "
+                "INSERT INTO rt_products (image_url, name, description, collection, category, size, price, ratings) "
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                 (
+                    json_data["image_url"],
                     json_data["name"],
                     json_data["description"],
                     json_data["collection"],
                     json_data["category"],
-                    json_data["sx"],
                     json_data["size"],
                     str(json_data["price"]),
                     json_data["ratings"],
@@ -159,15 +159,15 @@ def update_product(pid, json_data):
 
         if error is None:
             db.execute(
-                "UPDATE rt_products SET name = ?, description = ?, collection = ?, category = ?, sx = ?, size = ?, "
+                "UPDATE rt_products SET image_url = ?, name = ?, description = ?, collection = ?, category = ?, size = ?, "
                 "price = ?, ratings = ?"
                 "WHERE id = ?",
                 (
+                    product["image_url"],
                     product["name"],
                     product["description"],
                     product["collection"],
                     product["category"],
-                    product["sx"],
                     product["size"],
                     str(product["price"]),
                     product["ratings"],
@@ -178,7 +178,7 @@ def update_product(pid, json_data):
 
             # Get the updated product
             product = db.execute(
-                "SELECT id, name, description, collection, category, sx, size, price, ratings, created "
+                "SELECT id, image_url, name, description, collection, category, size, price, ratings, created "
                 "FROM rt_products WHERE id = ?", (pid,)).fetchone()
             return Product().dump(product)
 
@@ -222,11 +222,11 @@ def __validate_product(product):
     try:
         Product(
             only=(
+                "image_url",
                 "name",
                 "description",
                 "collection",
                 "category",
-                "sx",
                 "size",
                 "price",
                 "ratings"
