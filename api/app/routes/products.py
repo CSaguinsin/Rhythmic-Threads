@@ -12,11 +12,22 @@ bp = APIBlueprint("products", __name__, url_prefix="/products")
 
 
 @bp.get("")
-@bp.input({"ratings": Integer(), "category": String(), "collection": String(), "price": String()}, location="query")
+@bp.input(
+    {
+        "ratings": Integer(),
+        "category": String(),
+        "collection": String(),
+        "price": String(),
+        "size": String(),
+    },
+    location="query",
+)
 @bp.output(Product(many=True))
-@bp.doc(summary="Get all products",
-        description="You can filter products based on provided name parameters.\n\n"
-                    "Ex. /products?ratings=4&category=Clothing&collection=Summer 2023&price=100-200")
+@bp.doc(
+    summary="Get all products",
+    description="You can filter products based on provided name parameters.\n\n"
+    "Ex. /products?ratings=4&category=Clothing&collection=Summer 2023&price=100-200",
+)
 def get_products(query_data):
     """
     Get products based on the named parameters provided in the URL.
@@ -43,6 +54,9 @@ def get_products(query_data):
         if "price" in query_data:
             price = query_data["price"].split("-")
             query += "price BETWEEN ? AND ? AND "
+        if "size" in query_data:
+            query += "size = ? AND "
+            params.append(query_data["size"])
 
             # set min price to 0 if no min price is provided
             try:
@@ -73,8 +87,11 @@ def get_products(query_data):
 def get_product_by_id(pid):
     try:
         db = get_db()
-        product = db.execute("SELECT id, image_url, name, description, collection, category, size, price, ratings, created "
-                             "FROM rt_products WHERE id = ?", (pid,)).fetchone()
+        product = db.execute(
+            "SELECT id, image_url, name, description, collection, category, size, price, ratings, created "
+            "FROM rt_products WHERE id = ?",
+            (pid,),
+        ).fetchone()
 
         if product is not None:
             return Product().dump(product)
@@ -98,12 +115,7 @@ def create_product(json_data):
 
     try:
         if error:
-            return jsonify(
-                {
-                    "message": "Validation Error",
-                    "detail": error
-                }
-            )
+            return jsonify({"message": "Validation Error", "detail": error})
 
         if error is None:
             db.execute(
@@ -123,13 +135,15 @@ def create_product(json_data):
             db.commit()
 
             # Get the product that was just created
-            product = db.execute("SELECT * FROM rt_products WHERE name = ?", (json_data["name"],)).fetchone()
+            product = db.execute(
+                "SELECT * FROM rt_products WHERE name = ?", (json_data["name"],)
+            ).fetchone()
             return Product().dump(product)
     except Exception as e:
         abort(
             status_code=500,
             message=str("An error occurred while creating the product."),
-            detail=(str(e))
+            detail=(str(e)),
         )
     finally:
         close_db()
@@ -150,12 +164,7 @@ def update_product(pid, json_data):
 
     try:
         if error:
-            return jsonify(
-                {
-                    "message": "Validation Error",
-                    "detail": error
-                }
-            )
+            return jsonify({"message": "Validation Error", "detail": error})
 
         if error is None:
             db.execute(
@@ -179,14 +188,16 @@ def update_product(pid, json_data):
             # Get the updated product
             product = db.execute(
                 "SELECT id, image_url, name, description, collection, category, size, price, ratings, created "
-                "FROM rt_products WHERE id = ?", (pid,)).fetchone()
+                "FROM rt_products WHERE id = ?",
+                (pid,),
+            ).fetchone()
             return Product().dump(product)
 
     except Exception as e:
         abort(
             status_code=500,
             message=str("An error occurred while creating the product."),
-            detail=(str(e))
+            detail=(str(e)),
         )
     finally:
         close_db()
@@ -229,7 +240,7 @@ def __validate_product(product):
                 "category",
                 "size",
                 "price",
-                "ratings"
+                "ratings",
             )
         ).load(product)
         return None
