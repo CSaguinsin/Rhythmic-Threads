@@ -51,13 +51,12 @@ def get_products(query_data):
         if "collection" in query_data:
             query += "collection LIKE ? AND "
             params.append(query_data["collection"])
-        if "price" in query_data:
-            price = query_data["price"].split("-")
-            query += "price BETWEEN ? AND ? AND "
         if "size" in query_data:
             query += "size LIKE ? AND "
             params.append(query_data["size"])
-
+        if "price" in query_data:
+            price = query_data["price"].split("-")
+            query += "price BETWEEN ? AND ? AND "
             # set min price to 0 if no min price is provided
             try:
                 params.append(price[0])
@@ -70,7 +69,6 @@ def get_products(query_data):
             except IndexError:
                 params.append(9999999)
 
-        # allows case insensitive search [COLLATE NOCASE]
         query = query[:-5]
 
     try:

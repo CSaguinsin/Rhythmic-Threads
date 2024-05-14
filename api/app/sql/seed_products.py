@@ -26,7 +26,7 @@ def __generate_collection():
 
 # Function to generate a random category
 def __generate_category():
-    categories = ["Male", "Female" "Kids"]
+    categories = ["Men", "Women", "Kids"]
     return random.choice(categories)
 
 
