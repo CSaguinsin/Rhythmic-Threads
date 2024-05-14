@@ -50,13 +50,13 @@ const Navbar = () => {
             <a href="/">Home</a>
           </li>
           <li className="font-inter font-semibold">
-            <a href="/products?q=men">Men</a>
+            <a href="/products?category=men">Men</a>
           </li>
           <li className="font-inter font-semibold">
-            <a href="/products?q=women">Women</a>
+            <a href="/products?category=women">Women</a>
           </li>
           <li className="font-inter font-semibold">
-            <a href="/products?q=kids">Kids</a>
+            <a href="/products?category=kids">Kids</a>
           </li>
         </ul>
       </div>
