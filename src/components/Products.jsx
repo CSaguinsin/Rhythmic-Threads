@@ -1,15 +1,29 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+
 import AuthNavbar from "../authcomponents/AuthNavbar";
-import { useEffect } from "react";
 import { ProductCard } from "./ProductCard";
+import { useSearchParams } from "react-router-dom";
 
 export default function Products({ user }) {
   const [data, setData] = useState([]);
+  const [params, setParams] = useSearchParams();
 
   useEffect(() => {
-    fetch("/api/products").then((res) => setData(res.data));
-  }, []);
+    axios
+      .get("/api/products", {
+        params: {
+          ratings: params.get("ratings"),
+          category: params.get("category"),
+          collection: params.get("collection"),
+          size: params.get("size"),
+        },
+      })
+      .then((res) => {
+        setData(res.data);
+      });
+  }, [params]);
 
   return (
     <>
@@ -26,8 +40,14 @@ export default function Products({ user }) {
                   <div className="flex items-center space-x-2">
                     <input
                       id="men"
-                      type="checkbox"
-                      className="checkbox-warning checkbox h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+                      name="category"
+                      type="radio"
+                      value="men"
+                      onChange={() => {
+                        params.set("category", "men");
+                        setParams(params);
+                      }}
+                      className="radio-warning radio h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
                     />
                     <label
                       htmlFor="men"
@@ -39,8 +59,14 @@ export default function Products({ user }) {
                   <div className="flex items-center space-x-2">
                     <input
                       id="women"
-                      type="checkbox"
-                      className="checkbox-warning checkbox h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+                      name="category"
+                      type="radio"
+                      value="women"
+                      onChange={() => {
+                        params.set("category", "women");
+                        setParams(params);
+                      }}
+                      className="radio-warning radio h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
                     />
                     <label
                       htmlFor="women"
@@ -52,8 +78,14 @@ export default function Products({ user }) {
                   <div className="flex items-center space-x-2">
                     <input
                       id="kids"
-                      type="checkbox"
-                      className="checkbox-warning checkbox h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+                      value="kids"
+                      name="category"
+                      type="radio"
+                      onChange={() => {
+                        params.set("category", "kids");
+                        setParams(params);
+                      }}
+                      className="radio-warning radio h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
                     />
                     <label
                       htmlFor="kids"
@@ -71,9 +103,14 @@ export default function Products({ user }) {
                   <div className="flex items-center space-x-2">
                     <input
                       id="shorts"
-                      type="checkbox"
-                      value=""
-                      className="checkbox-warning checkbox h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+                      name="collection"
+                      type="radio"
+                      value="shorts"
+                      onChange={() => {
+                        params.set("collection", "shorts");
+                        setParams(params);
+                      }}
+                      className="radio-warning radio h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
                     />
                     <label
                       htmlFor="shorts"
@@ -85,9 +122,14 @@ export default function Products({ user }) {
                   <div className="flex items-center space-x-2">
                     <input
                       id="jackets"
-                      type="checkbox"
-                      value=""
-                      className="checkbox-warning checkbox h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+                      name="collection"
+                      type="radio"
+                      value="jackets"
+                      onChange={() => {
+                        params.set("collection", "jackets");
+                        setParams(params);
+                      }}
+                      className="radio-warning radio h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
                     />
                     <label
                       htmlFor="jackets"
@@ -99,9 +141,14 @@ export default function Products({ user }) {
                   <div className="flex items-center space-x-2">
                     <input
                       id="tshirts"
-                      type="checkbox"
-                      value=""
-                      className="checkbox-warning checkbox h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+                      type="radio"
+                      name="collection"
+                      value="tshirts"
+                      onChange={() => {
+                        params.set("collection", "t-shirts");
+                        setParams(params);
+                      }}
+                      className="radio-warning radio h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
                     />
                     <label
                       htmlFor="tshirts"
@@ -119,9 +166,14 @@ export default function Products({ user }) {
                   <div className="flex items-center space-x-2">
                     <input
                       id="s"
-                      type="checkbox"
-                      value=""
-                      className="checkbox-warning checkbox h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+                      type="radio"
+                      name="size"
+                      value="s"
+                      onChange={() => {
+                        params.set("size", "s");
+                        setParams(params);
+                      }}
+                      className="radio-warning radio h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
                     />
                     <label
                       htmlFor="s"
@@ -133,9 +185,14 @@ export default function Products({ user }) {
                   <div className="flex items-center space-x-2">
                     <input
                       id="m"
-                      type="checkbox"
-                      value=""
-                      className="checkbox-warning checkbox h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+                      name="size"
+                      type="radio"
+                      value="m"
+                      onChange={() => {
+                        params.set("size", "m");
+                        setParams(params);
+                      }}
+                      className="radio-warning radio h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
                     />
                     <label
                       htmlFor="m"
@@ -147,9 +204,14 @@ export default function Products({ user }) {
                   <div className="flex items-center space-x-2">
                     <input
                       id="l"
-                      type="checkbox"
-                      value=""
-                      className="checkbox-warning checkbox h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+                      type="radio"
+                      name="size"
+                      value="l"
+                      onChange={() => {
+                        params.set("size", "l");
+                        setParams(params);
+                      }}
+                      className="radio-warning radio h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
                     />
                     <label
                       htmlFor="l"
@@ -161,9 +223,14 @@ export default function Products({ user }) {
                   <div className="flex items-center space-x-2">
                     <input
                       id="xl"
-                      type="checkbox"
-                      value=""
-                      className="checkbox-warning checkbox h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+                      type="radio"
+                      name="size"
+                      value="xl"
+                      onChange={() => {
+                        params.set("size", "xl");
+                        setParams(params);
+                      }}
+                      className="radio-warning radio h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
                     />
                     <label
                       htmlFor="xl"
@@ -175,9 +242,14 @@ export default function Products({ user }) {
                   <div className="flex items-center space-x-2">
                     <input
                       id="xxl"
-                      type="checkbox"
-                      value=""
-                      className="checkbox-warning checkbox h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+                      type="radio"
+                      value="xxl"
+                      name="size"
+                      className="radio-warning radio h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+                      onChange={() => {
+                        params.set("size", "xxl");
+                        setParams(params);
+                      }}
                     />
                     <label
                       htmlFor="xxl"
@@ -188,15 +260,12 @@ export default function Products({ user }) {
                   </div>
 
                   <div className="flex w-full items-center pt-4">
-                    <button type="reset" className="btn px-5">
-                      Reset
-                    </button>
                     <button
-                      type="submit"
-                      className="btn ml-2 text-gray-50"
-                      style={{ backgroundColor: "#F68347" }}
+                      type="reset"
+                      className="btn px-5"
+                      onClick={() => setParams()}
                     >
-                      Apply filters
+                      Reset
                     </button>
                   </div>
                 </div>
@@ -207,7 +276,7 @@ export default function Products({ user }) {
           {/* Grid content */}
           <div className="grid-rows-auto grid h-max w-full grid-cols-1 content-stretch items-stretch gap-8 p-4 md:grid-cols-2 lg:grid-cols-3">
             {data?.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard key={product?.id} product={product} />
             ))}
           </div>
         </div>
