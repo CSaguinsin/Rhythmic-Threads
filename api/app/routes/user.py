@@ -49,7 +49,8 @@ def update_user(id, json_data):
             )
         if "username" in json_data:
             db.execute(
-                "UPDATE rt_users SET username = ? WHERE id = ?", (json_data["username"], id)
+                "UPDATE rt_users SET username = ? WHERE id = ?",
+                (json_data["username"], id),
             )
         db.commit()
         return {"message": f"User {id} successfully updated."}, 200

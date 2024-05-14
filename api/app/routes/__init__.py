@@ -7,7 +7,7 @@ from app import jwt
 from app.db import get_db
 from app.models.user import UserResponse
 
-auth_token = HTTPTokenAuth(scheme='Bearer')
+auth_token = HTTPTokenAuth(scheme="Bearer")
 
 
 # Register a callback function that takes whatever object is passed in as the
@@ -27,12 +27,15 @@ def user_lookup_callback(_jwt_header, jwt_data):
     try:
         db = get_db()
         user = db.execute(
-            "SELECT id, username, name, created FROM rt_users WHERE username = ?", (identity,)
+            "SELECT id, username, name, created FROM rt_users WHERE username = ?",
+            (identity,),
         ).fetchone()
 
         return UserResponse().dump(user)
     except Exception as e:
-        abort(500, message="An error occurred while looking up the user.", detail=str(e))
+        abort(
+            500, message="An error occurred while looking up the user.", detail=str(e)
+        )
 
 
 @auth_token.verify_token
@@ -55,7 +58,8 @@ def verify_token(token):
         if not expired:
             db = get_db()
             user = db.execute(
-                "SELECT id, username, created, updated FROM rt_users WHERE username = ?", (user_id,)
+                "SELECT id, username, created, updated FROM rt_users WHERE username = ?",
+                (user_id,),
             ).fetchone()
 
             if user is None:
@@ -66,8 +70,4 @@ def verify_token(token):
             abort(401, message="Token has expired. Please log in again.")
 
     except Exception as e:
-        abort(
-            500,
-            message="An error occurred while verifying token.",
-            detail=str(e)
-        )
+        abort(500, message="An error occurred while verifying token.", detail=str(e))

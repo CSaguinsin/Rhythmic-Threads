@@ -68,14 +68,17 @@ def login(json_data):
     try:
         # Get user from database
         user = db.execute(
-            "SELECT id, username, password, created, updated FROM rt_users WHERE username = ?", (username,)
+            "SELECT id, username, password, created, updated FROM rt_users WHERE username = ?",
+            (username,),
         ).fetchone()
 
         # check password hash
         if user is not None:
             if check_password_hash(user["password"], password):
                 # Create a new access token that expires in 24 hours
-                token = create_access_token(identity=user, expires_delta=timedelta(days=1))
+                token = create_access_token(
+                    identity=user, expires_delta=timedelta(days=1)
+                )
 
                 verify_token(token)
 
@@ -84,7 +87,9 @@ def login(json_data):
                 abort(401, message="Invalid password.")
 
     except Exception as e:
-        abort(500, message="An error occurred while logging in the user.", detail=str(e))
+        abort(
+            500, message="An error occurred while logging in the user.", detail=str(e)
+        )
     finally:
         close_db()
 

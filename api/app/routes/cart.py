@@ -49,7 +49,8 @@ def get_cart():
                 rt_users ON rt_carts.user_id = rt_users.id
             WHERE
                 rt_users.id = ?
-            """, (user_id,)
+            """,
+            (user_id,),
         ).fetchall()
         return CartRequest().dump(user_cart)
 
@@ -65,10 +66,12 @@ def get_cart():
 @bp.input(CartItemRequest, location="json")
 @bp.auth_required(auth_token)
 @jwt_required()
-@bp.doc(summary="Add or update an item to the user's shopping cart",
-        description="Add product to the user's shopping cart, update "
-                    "the quantity if the product is already added.\n\n"
-                    "This requires a logged-in user to get the current user id.")
+@bp.doc(
+    summary="Add or update an item to the user's shopping cart",
+    description="Add product to the user's shopping cart, update "
+    "the quantity if the product is already added.\n\n"
+    "This requires a logged-in user to get the current user id.",
+)
 def add_to_cart(json_data):
     db = get_db()
     user_id = current_user.id
@@ -104,7 +107,11 @@ def add_to_cart(json_data):
                 if existing_product:
                     db.execute(
                         "UPDATE rt_cart_items SET qty = ? WHERE product_id = ? AND cart_id = ?",
-                        (existing_product["qty"] + json_data["qty"], json_data["product_id"], cart_id),
+                        (
+                            existing_product["qty"] + json_data["qty"],
+                            json_data["product_id"],
+                            cart_id,
+                        ),
                     )
                 else:
                     # if the product is not added, add the product to the cart
@@ -130,8 +137,10 @@ def add_to_cart(json_data):
 @bp.input({"product_id": Integer()}, location="query")
 @bp.auth_required(auth_token)
 @jwt_required()
-@bp.doc(summary="Remove an item from the user's shopping cart",
-        description="Remove a product from the user's shopping cart by providing the product id.")
+@bp.doc(
+    summary="Remove an item from the user's shopping cart",
+    description="Remove a product from the user's shopping cart by providing the product id.",
+)
 def remove_from_cart(query_data):
     db = get_db()
 

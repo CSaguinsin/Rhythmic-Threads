@@ -2,8 +2,14 @@ import os
 from datetime import datetime, timezone, timedelta
 
 from apiflask import APIFlask
-from flask_jwt_extended import JWTManager, get_jwt, get_jwt_identity, create_access_token, set_access_cookies, \
-    jwt_required
+from flask_jwt_extended import (
+    JWTManager,
+    get_jwt,
+    get_jwt_identity,
+    create_access_token,
+    set_access_cookies,
+    jwt_required,
+)
 
 jwt = JWTManager()
 

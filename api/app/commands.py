@@ -38,7 +38,9 @@ def seed_db_cmd(count):
 
 @click.command("create-user")
 @click.option("--username", prompt="Enter username")
-@click.option("--pw", prompt="Enter password", hide_input=True, confirmation_prompt=True)
+@click.option(
+    "--pw", prompt="Enter password", hide_input=True, confirmation_prompt=True
+)
 @click.option("--name", prompt="Enter full name", required=False)
 @with_appcontext
 def create_user_cmd(username, pw, name):
@@ -58,7 +60,9 @@ def create_user_cmd(username, pw, name):
     db = get_db()
 
     try:
-        user_data = UserRequest().load({"username": username, "password": pw, "name": name})
+        user_data = UserRequest().load(
+            {"username": username, "password": pw, "name": name}
+        )
         hashed_pw = generate_password_hash(user_data["password"])
 
         db.execute(
