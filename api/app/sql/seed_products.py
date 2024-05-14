@@ -20,25 +20,19 @@ def __generate_rating():
 
 # Function to generate a random collection
 def __generate_collection():
-    collections = ["Summer 2023", "Winter 2023", "Fall 2023", "Spring 2023"]
+    collections = ["T-Shirts", "Jackets", "Shorts"]
     return random.choice(collections)
 
 
 # Function to generate a random category
 def __generate_category():
-    categories = ["Clothing", "Accessories", "Shoes", "Bags"]
+    categories = ["Male", "Female" "Kids"]
     return random.choice(categories)
-
-
-# Function to generate a random gender
-def __generate_sx():
-    genders = ["Men", "Women", "Unisex"]
-    return random.choice(genders)
 
 
 # Function to generate a random size
 def __generate_size():
-    sizes = ["S", "M", "L", "XL", "One Size"]
+    sizes = ["S", "M", "L", "XL", "XXL"]
     return random.choice(sizes)
 
 
@@ -55,20 +49,19 @@ def seed_products(count=5):
 
     for _ in range(count):
         product = {
+            "image_url": fake.image_url(),
             "name": fake.name(),
             "description": fake.text(),
             "collection": __generate_collection(),
             "category": __generate_category(),
-            "sx": __generate_sx(),
             "size": __generate_size(),
             "price": __generate_price(),
             "ratings": __generate_rating(),
         }
 
         db.execute(
-            "INSERT INTO rt_products (name, description, collection, category, sx, size, price, ratings) "
-            "VALUES (:name, :description, :collection, :category, :sx, :size, :price, "
-            ":ratings)",
+            "INSERT INTO rt_products (image_url, name, description, collection, category, size, price, ratings) "
+            "VALUES (:image_url, :name, :description, :collection, :category, :size, :price, :ratings)",
             product,
         )
     db.commit()
