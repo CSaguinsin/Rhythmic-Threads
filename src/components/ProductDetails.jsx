@@ -4,9 +4,31 @@ import { useEffect, useState } from "react";
 /* eslint-disable react/prop-types */
 export default function ProductDetails() {
   const [product, setProduct] = useState(null);
+  const token = localStorage.getItem("token");
 
   // get current id in current pathname
   const id = window.location.pathname.split("/")[2];
+
+  // Add to cart
+  const addToCart = async () => {
+    // get user id
+    const userId = JSON.parse(localStorage.getItem("user")).id;
+
+    await axios.post("/api/cart", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      user_id: userId,
+      product_id: id,
+      qty: 1,
+    });
+
+    // show notification
+    document.getElementById("added").classList.remove("hidden");
+    setTimeout(() => {
+      document.getElementById("added").classList.add("hidden");
+    }, 3000);
+  };
 
   useEffect(() => {
     // fetch product from api
@@ -32,6 +54,7 @@ export default function ProductDetails() {
           </div>
 
           <div className="mt-8 w-full lg:mt-0 lg:w-1/2">
+            {/* Product name & description */}
             <h2 className="text-3xl font-bold">{product?.name}</h2>
             <p className="mt-2 text-gray-500">{product?.description}</p>
 
@@ -60,9 +83,18 @@ export default function ProductDetails() {
             <button
               className="btn mt-5 w-1/3 px-8 text-white"
               style={{ backgroundColor: "#F68347" }}
+              onClick={() => addToCart()}
             >
               Add to cart
             </button>
+
+            {/* Added to cart notification */}
+            <div
+              id="added"
+              className="mt-5 hidden w-max rounded border border-green-400 bg-green-100 px-4 py-3 text-green-700"
+            >
+              <strong className="font-semibold">Product added to cart</strong>
+            </div>
           </div>
         </div>
       </div>

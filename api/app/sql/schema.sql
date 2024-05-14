@@ -44,6 +44,7 @@ CREATE TABLE rt_cart_items (
     cart_id INTEGER NOT NULL,
     product_id INTEGER NOT NULL,
     qty INTEGER NOT NULL,
+    size TEXT NOT NULL,
     date_added TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (cart_id) REFERENCES rt_carts (id),
     FOREIGN KEY (product_id) REFERENCES rt_products (id)

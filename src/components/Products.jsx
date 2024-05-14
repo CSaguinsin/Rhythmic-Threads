@@ -3,10 +3,11 @@ import { Outlet } from "react-router-dom";
 import AuthNavbar from "../authcomponents/AuthNavbar";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import localStorage from "../utils/localStorage";
 
 export default function Products() {
   const [user, setUser] = useState(null);
-  const token = JSON.parse(localStorage.getItem("token"));
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     // fetch user from api
@@ -17,7 +18,10 @@ export default function Products() {
             Authorization: `Bearer ${token}`,
           },
         })
-        .then((res) => setUser(res.data));
+        .then((res) => {
+          localStorage.setItem("user", JSON.stringify(res.data));
+          setUser(res.data);
+        });
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);

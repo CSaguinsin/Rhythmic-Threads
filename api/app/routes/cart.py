@@ -1,3 +1,4 @@
+import json
 from apiflask import APIBlueprint, abort
 from flask import jsonify
 from flask_jwt_extended import jwt_required, current_user
@@ -98,7 +99,7 @@ def add_to_cart(json_data):
 
                 # check if the product is already added
                 existing_product = db.execute(
-                    "SELECT qty FROM rt_cart_items WHERE product_id = ? AND cart_id = ?",
+                    "SELECT qty, size FROM rt_cart_items WHERE product_id = ? AND cart_id = ?",
                     (json_data["product_id"],),
                     (json_data["cart_id"],),
                 ).fetchone()
@@ -106,18 +107,19 @@ def add_to_cart(json_data):
                 # if the product is already added, update the quantity
                 if existing_product:
                     db.execute(
-                        "UPDATE rt_cart_items SET qty = ? WHERE product_id = ? AND cart_id = ?",
+                        "UPDATE rt_cart_items SET qty = ? WHERE product_id = ? AND cart_id = ? AND size = ?",
                         (
                             existing_product["qty"] + json_data["qty"],
                             json_data["product_id"],
                             cart_id,
+                            json_data["size"],
                         ),
                     )
                 else:
                     # if the product is not added, add the product to the cart
                     db.execute(
-                        "INSERT INTO rt_cart_items (product_id, qty) VALUES (?, ?)",
-                        (cart_id, json_data["product_id"], json_data["qty"]),
+                        "INSERT INTO rt_cart_items (product_id, qty, size) VALUES (?, ?, ?)",
+                        (cart_id, json_data["product_id"], json_data["qty"], json_data["size"]),
                     )
 
             db.commit()
