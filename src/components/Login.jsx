@@ -43,7 +43,7 @@ const Login = () => {
           onSubmit={(e) => handleLogin(e)}
           className="flex items-center justify-center py-20"
         >
-          <div className="max-w-[400px] rounded-xl bg-gray-50 p-12 text-center shadow-lg dark:bg-gray-800">
+          <div className="max-w-[440px] rounded-xl bg-gray-50 p-12 text-center shadow-lg dark:bg-gray-800">
             <h2
               style={{
                 color: "#f68347",
