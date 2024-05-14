@@ -52,6 +52,12 @@ const AuthNavbar = memo(function AuthNavbar({ user }) {
 
       {user ? (
         <div className="navbar-end space-x-3">
+          {/* Cart */}
+          <a href="/cart" className="btn btn-ghost">
+            <img src="/icons/cart.png" className="h-6 w-6" />
+          </a>
+
+          {/* User Dropdown */}
           <details className="dropdown">
             <summary className="btn glass m-1 flex items-center pe-1 text-sm">
               <img
