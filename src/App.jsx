@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 // components
 import Home from "./components/Home";
 import Products from "./components/Products";
+import Cart from "./components/Cart";
 import ProductDetails from "./components/ProductDetails";
 import ProductCatalog from "./components/ProductCatalog";
 import Footer from "./components/Footer";
@@ -21,9 +22,8 @@ function App() {
         <Route element={<Products />}>
           <Route path="/products" element={<ProductCatalog />} />
           <Route path="/products/:id" element={<ProductDetails />} />
+          <Route path="/cart" element={<Cart />} />
         </Route>
-
-        {/* route and subroutes of user */}
 
         {/* Auth */}
         <Route path="/login" element={<Login />} />

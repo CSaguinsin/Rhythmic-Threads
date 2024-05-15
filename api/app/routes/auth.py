@@ -35,10 +35,19 @@ def register(json_data):
             name = None
 
         if error is None:
+            # create user
             db.execute(
                 "INSERT INTO rt_users (username, name, password) VALUES (?, ?, ?)",
                 (username, name, generate_password_hash(password)),
             )
+
+            user_id = db.execute(
+                "SELECT id FROM rt_users WHERE username = ?", (username,)
+            ).fetchone()
+
+            # create user cart
+            db.execute("INSERT INTO rt_carts (user_id) VALUES (?)", (user_id,))
+
             db.commit()
             return GenericResponse().dump(
                 {"message": f"User {username} successfully registered."}

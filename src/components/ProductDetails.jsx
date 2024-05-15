@@ -1,27 +1,35 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import localStorage from "../utils/localStorage";
 
 /* eslint-disable react/prop-types */
 export default function ProductDetails() {
   const [product, setProduct] = useState(null);
-  const token = localStorage.getItem("token");
 
   // get current id in current pathname
   const id = window.location.pathname.split("/")[2];
 
   // Add to cart
   const addToCart = async () => {
-    // get user id
-    const userId = JSON.parse(localStorage.getItem("user")).id;
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user"));
 
-    await axios.post("/api/cart", {
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const size = document.querySelector('input[name="size"]:checked').id;
+
+    await axios.post(
+      "/api/cart",
+      {
+        user_id: user.id,
+        product_id: id,
+        qty: 1,
+        size: size,
       },
-      user_id: userId,
-      product_id: id,
-      qty: 1,
-    });
+      {
+        headers: {
+          Authorization: `Bearer ${token.replace(/['"]+/g, "")}`,
+        },
+      },
+    );
 
     // show notification
     document.getElementById("added").classList.remove("hidden");
@@ -65,7 +73,13 @@ export default function ProductDetails() {
                 <input id="s" type="radio" name="size" className="radio" />
                 <label htmlFor="s">S</label>
 
-                <input id="m" type="radio" name="size" className="radio" />
+                <input
+                  id="m"
+                  type="radio"
+                  name="size"
+                  className="radio"
+                  defaultChecked
+                />
                 <label htmlFor="m">M</label>
 
                 <input id="l" type="radio" name="size" className="radio" />
